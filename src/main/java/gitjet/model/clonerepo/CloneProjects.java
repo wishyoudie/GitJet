@@ -1,4 +1,4 @@
-package gitjet.model;
+package gitjet.model.clonerepo;
 
 import gitjet.model.Errors;
 import org.eclipse.jgit.api.Git;
@@ -12,7 +12,7 @@ import java.util.List;
 public class CloneProjects {
 
     public static void main(String[] args) throws IOException, GitCloningException {
-        cloneProject(setUpLinks(new File("src/test.txt")));
+        cloneProject(setUpLinks(new File("test.txt")));
     }
 
     public static List<String> setUpLinks(File file) throws IOException {
