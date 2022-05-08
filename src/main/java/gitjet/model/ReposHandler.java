@@ -15,7 +15,7 @@ public class ReposHandler {
             numberOfStringsInTests, readmeInProject;
     List<String> mavenDependencies;
 
-    public void handler(String repo) throws GitCloningException, GitAPIException, IOException {
+    public void handle(String repo) throws GitCloningException, GitAPIException, IOException {
         System.out.println("Starting cloning process");
         runCloning(repo);
 

@@ -3,20 +3,31 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.Controller">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem fx:id="fileNewMenuItem" mnemonicParsing="false" text="New" onAction="#fileNewMenuItemClick" />
-                        <MenuItem fx:id="fileSaveMenuItem" mnemonicParsing="false" text="Save" onAction="#fileSaveMenuItemClick"/>
-                        <MenuItem fx:id="fileClearMenuItem" mnemonicParsing="false" text="Clear" onAction="#fileClearMenuItemClick"/>
+                        <MenuItem fx:id="fileNewMenuItem" mnemonicParsing="false" onAction="#fileNewMenuItemClick" text="New" />
+                        <MenuItem fx:id="fileSaveMenuItem" mnemonicParsing="false" onAction="#fileSaveMenuItemClick" text="Save" />
+                        <MenuItem fx:id="fileClearMenuItem" mnemonicParsing="false" onAction="#fileClearMenuItemClick" text="Clear" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
     </top>
+   <center>
+      <TableView fx:id="tableRepos" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
+            <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
+        </columns>
+      </TableView>
+   </center>
 </BorderPane>
