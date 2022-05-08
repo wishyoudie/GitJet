@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -9,12 +11,9 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Analyze">
-                    <items>
-                        <MenuItem fx:id="analyzeNewMenuItem" mnemonicParsing="false" text="New" onAction="#analyzeNewMenuItemClick"/>
+                        <MenuItem fx:id="fileNewMenuItem" mnemonicParsing="false" text="New" onAction="#fileNewMenuItemClick" />
+                        <MenuItem fx:id="fileSaveMenuItem" mnemonicParsing="false" text="Save" onAction="#fileSaveMenuItemClick"/>
+                        <MenuItem fx:id="fileClearMenuItem" mnemonicParsing="false" text="Clear" onAction="#fileClearMenuItemClick"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
