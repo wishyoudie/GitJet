@@ -4,27 +4,50 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+
+import static gitjet.model.FilesList.getFilesList;
 
 public class LineSize {
-    public static void main(String[] args) throws IOException {
-        File cloneDirectory = new File("clones/KotlinAsFirst2020/src/");
-        Integer stringCounter = 0;
-        System.out.println(iterateString(stringCounter, cloneDirectory));
+    public static String printLineSize() throws IOException {
+        File clonesDirectory = new File("clones");
+        File[] allClones = getFilesList(clonesDirectory);
+
+        int averageSize = 0;
+
+        for (File file : allClones) {
+
+            if (file.isHidden()) {
+                continue;
+            }
+
+            Integer stringCounter = 0;
+            Integer result = iterateStrings(stringCounter, file);
+            averageSize += result;
+            System.out.println(file.getName() + " size is: " + result + " lines");
+        }
+
+        return String.valueOf(averageSize / allClones.length);
+
     }
 
-    public static Integer iterateString(Integer counter, File path) throws IOException {
+    private static Integer iterateStrings(Integer counter, File path) throws IOException {
         File[] filesList = getFilesList(path);
         for (File file : filesList) {
             if (file.isDirectory()) {
-                counter += iterateString(0, new File(String.valueOf(file)));
+                counter += iterateStrings(0, new File(String.valueOf(file)));
             } else {
-                counter += countStrings(path, file);
+                String fileExtension = getExtensionByStringHandling(file.getName());
+                if (Objects.equals(fileExtension, "java") || Objects.equals(fileExtension, "kt")) {
+                    counter += countStrings(file);
+                }
             }
         }
         return counter;
     }
 
-    public static Integer countStrings(File path, File filesList) throws IOException {
+    private static Integer countStrings(File filesList) throws IOException {
         int counter = 1;
         BufferedReader reader = new BufferedReader(new FileReader(filesList));
         while (reader.readLine() != null) counter++;
@@ -32,16 +55,8 @@ public class LineSize {
         return counter;
     }
 
-    public static File[] getFilesList(File inputFile) {
-        if (!inputFile.isDirectory()) {
-            return new File[] {inputFile};
-        }
-
-        File[] filesList = inputFile.listFiles();
-        if (filesList == null) {
-            throw new IllegalArgumentException("");
-        }
-
-        return filesList;
+    private static String getExtensionByStringHandling(String file) {
+        String[] fileNameSplited = file.split("\\.");
+        return fileNameSplited[fileNameSplited.length - 1];
     }
 }

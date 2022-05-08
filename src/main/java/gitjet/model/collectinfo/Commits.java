@@ -2,56 +2,65 @@ package gitjet.model.collectinfo;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static gitjet.model.FilesList.getFilesList;
 
 public class Commits {
 
+    public static List<String> commitsStats() throws GitAPIException, IOException {
+        File clonesDirectory = new File("clones");
+        File[] allClones = getFilesList(clonesDirectory);
 
-    public static void main(String[] args) throws GitAPIException, IOException {
-        String repoURL = "https://github.com/Kotlin-Polytech/KotlinAsFirst2020";
-        File cloneDirectory = new File("clones/KotlinAsFirst2020");
-        // ВОВА РАЗКОМЕНТИ ЭТУ ТЕМУ СНИЗУ ЧТОБЫ КЛОНИРОВАТЬ СЕБЕ РЕПУ
-//        cloneDirectory.mkdirs();
-//
-//        System.out.println("Cloning KotlinAsFirst2020 into " + cloneDirectory);
-//        Git.cloneRepository()
-//                .setURI(repoURL)
-//                .setDirectory(Paths.get(String.valueOf(cloneDirectory)).toFile())
-//                .call();
-//        System.out.println("Completed Cloning");
+        int numberOfContributors = 0;
+        int numberOfCommits = 0;
 
-        Git git = Git.open(cloneDirectory);
-        Repository repo = git.getRepository();
+        for(File file : allClones) {
 
-        Iterable<RevCommit> commits = git.log().all().call();
-
-        Map<String, Integer> commitsPerContributors = new HashMap<>();
-
-        for (RevCommit commit : commits) {
-            String contributorName = commit.getAuthorIdent().getName();
-            if (!commitsPerContributors.containsKey(contributorName)) {
-                commitsPerContributors.put(contributorName, 1);
-            } else {
-                Integer newNumber = commitsPerContributors.get(contributorName) + 1;
-                commitsPerContributors.put(contributorName, newNumber);
+            if (file.isHidden()) {
+                continue;
             }
+
+            Git git = Git.open(file);
+            Iterable<RevCommit> commits = git.log().all().call();
+            Map<String, Integer> commitsPerContributors = new HashMap<>();
+
+            System.out.println("Checking " + file.getName() + " project");
+
+            for (RevCommit commit : commits) {
+                String contributorName = commit.getAuthorIdent().getName();
+                if (!commitsPerContributors.containsKey(contributorName)) {
+                    commitsPerContributors.put(contributorName, 1);
+                } else {
+                    Integer newNumber = commitsPerContributors.get(contributorName) + 1;
+                    commitsPerContributors.put(contributorName, newNumber);
+                }
+
+                numberOfCommits += 1;
+            }
+
+            System.out.println("Number of contributors: " + commitsPerContributors.size() + "\n");
+            numberOfContributors += commitsPerContributors.size();
+            System.out.println("Commits per contributors: ");
+
+            for (Map.Entry<String, Integer> entry : commitsPerContributors.entrySet()) {
+                System.out.println(entry.getKey() + " = " + entry.getValue());
+            }
+
+            System.out.println(file.getName() + " project checked\n");
         }
 
-        System.out.println("Number of contributors: " + commitsPerContributors.size() + "\n");
-        System.out.println("Commits per contributors \n" +
-                "");
-
-        for (Map.Entry<String, Integer> entry : commitsPerContributors.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-
+        List<String> results = new ArrayList<>();
+        results.add(String.valueOf(numberOfContributors / allClones.length));
+        results.add(String.valueOf(numberOfCommits / allClones.length));
+        results.add(String.valueOf(numberOfCommits / numberOfContributors));
+        return results;
     }
-
-
 }
