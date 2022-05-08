@@ -6,12 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Controller {
@@ -31,6 +34,15 @@ public class Controller {
 
     @FXML
     private Button newRepoButton;
+
+    @FXML
+    private Button newRepoOpenFileButton;
+
+    @FXML
+    private Button clearSaveButton;
+
+    @FXML
+    private Button cancelClearSaveButton;
 
     @FXML
     protected void fileNewMenuItemClick() throws IOException {
@@ -65,7 +77,44 @@ public class Controller {
     protected void newRepoFieldInsert() throws GitAPIException, GitCloningException, IOException {
         String newRepoTextUrl = newRepoField.getText();
         reposHandler.handler(newRepoTextUrl);
-        Stage stage = (Stage) newRepoField.getScene().getWindow();
+        killWindow(newRepoField);
+    }
+
+    @FXML
+    protected void newRepoOpenFileClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select file with a list of repositories");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("TXT", "*.txt"),
+                new FileChooser.ExtensionFilter("All text files", "*.*"),
+                new FileChooser.ExtensionFilter("DAT", "*.dat")
+        );
+        File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
+        if (file != null) {
+            System.out.println("Opened file " + file.getName());
+            // Pass to model
+            killWindow(newRepoOpenFileButton);
+        }
+    }
+
+    @FXML
+    protected void clearSaveButtonClick() {
+        System.out.println("Cleared save");
+        // Clear save
+        killWindow(clearSaveButton);
+    }
+
+    @FXML
+    protected void cancelClearSaveWarningWindowButtonClick() {
+        killWindow(cancelClearSaveButton);
+    }
+
+    /**
+     * Kill window of control element.
+     * @param ctrl Control element.
+     */
+    private void killWindow(Control ctrl) {
+        Stage stage = (Stage) ctrl.getScene().getWindow();
         stage.close();
     }
 }

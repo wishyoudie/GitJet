@@ -16,11 +16,6 @@
                         <MenuItem fx:id="fileClearMenuItem" mnemonicParsing="false" text="Clear" onAction="#fileClearMenuItemClick"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
     </top>
