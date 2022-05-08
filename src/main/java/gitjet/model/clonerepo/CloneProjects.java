@@ -7,14 +7,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CloneProjects {
     private String repo;
-
-//    public static void main(String[] args) throws IOException, GitCloningException {
-//        cloneProject(setUpLinks(new File("test.txt")));
-//    }
 
     public static List<String> setUpLinks(File file) throws IOException { // for .txt file
         List<String> repos = new ArrayList<>();
@@ -30,7 +27,8 @@ public class CloneProjects {
 
     public void cloneProject() throws GitCloningException {
 //        for (String repo: repos) {
-        File cloneDirectory = new File("clones/" + repo.replace("https://github.com/", ""));
+        String repoName = repoNameFromLink(repo);
+        File cloneDirectory = new File("clones/" + repoName);
         cloneDirectory.mkdirs();
 
         try {
@@ -44,6 +42,11 @@ public class CloneProjects {
             throw new GitCloningException(Errors.CLONE_ERROR.getMessage());
         }
 //        }
+    }
+
+    public String repoNameFromLink(String link) {
+        List<String> linkSplited = Arrays.asList(link.split("/"));
+        return linkSplited.get(linkSplited.size() - 1);
     }
 
     public void setRepos(String repo) {
