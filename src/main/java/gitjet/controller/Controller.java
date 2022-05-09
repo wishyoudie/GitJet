@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileDeleteStrategy;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;

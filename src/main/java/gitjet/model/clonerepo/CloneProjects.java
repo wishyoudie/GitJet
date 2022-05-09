@@ -32,11 +32,14 @@ public class CloneProjects {
     }
 
     public static void deleteClone() throws GitCloningException {
-        try {
-            FileDeleteStrategy.FORCE.delete(new File("clones"));
+        /*try {
+            File clonePath = new File("clones");
+            clonePath.deleteOnExit();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
-        }
+            throw new IllegalArgumentException(e.getMessage());
+            //throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
+        }*/
+        File clonePath = new File("clones");
+        clonePath.deleteOnExit();
     }
 }
