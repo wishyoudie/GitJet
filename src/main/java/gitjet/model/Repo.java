@@ -1,5 +1,9 @@
 package gitjet.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Repo {
 
     private String name;
@@ -15,6 +19,15 @@ public class Repo {
     }
 
     public Repo() {
+    }
+
+    public Repo(String rawRepo) {
+        String[] rawParts = rawRepo.split(" ");
+        List<String> parts = new ArrayList<>(Arrays.asList(rawParts));
+        this.name = parts.get(0);
+        this.numberOfContributors = Integer.parseInt(parts.get(1));
+        this.amountOfLines = Integer.parseInt(parts.get(2));
+        this.numberOfCommits = Integer.parseInt(parts.get(3));
     }
 
     public String getName() {
@@ -42,10 +55,15 @@ public class Repo {
     }
 
     public int getNumberOfCommits() {
-        return this.amountOfLines;
+        return this.numberOfCommits;
     }
 
     public void setNumberOfCommits(int numberOfCommits) {
         this.numberOfCommits = numberOfCommits;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %d %d %d", this.name, this.numberOfContributors, this.amountOfLines, this.numberOfCommits);
     }
 }

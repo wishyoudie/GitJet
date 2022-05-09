@@ -24,7 +24,7 @@
    <center>
       <TableView fx:id="tableRepos" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
           <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
             <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
         </columns>

@@ -10,7 +10,7 @@ import java.util.Optional;
 import static gitjet.model.FilesList.getFilesList;
 
 public class LineSize {
-    public static String printLineSize() throws IOException {
+    public static Integer getAmountOfLines() throws IOException {
         File clonesDirectory = new File("clones");
         File[] allClones = getFilesList(clonesDirectory);
 
@@ -28,7 +28,7 @@ public class LineSize {
             System.out.println(file.getName() + " size is: " + result + " lines");
         }
 
-        return String.valueOf(averageSize / allClones.length);
+        return averageSize / allClones.length;
 
     }
 
