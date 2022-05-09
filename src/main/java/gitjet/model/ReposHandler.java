@@ -31,10 +31,10 @@ public class ReposHandler {
         String repoName = getRepoName(link);
 
         System.out.println("Starting cloning process");
-        runCloning(link, repoName);
+        File clone = runCloning(link, repoName);
 
         Commits commits = new Commits();
-        commits.commitsStats(repoName);
+        commits.commitsStats(clone);
 
         numberofContributors = commits.getNumberOfContributors();
         numberOfCommits = commits.getNumberOfCommits();
@@ -50,7 +50,7 @@ public class ReposHandler {
         // other classes
 
         System.out.println("Starting deleting process");
-        deleteClone();
+        deleteClone(clone);
         System.out.println("Deleted");
 
         return new Repo(link, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name

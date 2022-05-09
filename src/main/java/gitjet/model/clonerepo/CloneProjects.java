@@ -1,45 +1,41 @@
 package gitjet.model.clonerepo;
 
 import gitjet.model.Errors;
-import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CloneProjects {
 
-    public static void runCloning(String repo, String repoName) throws GitCloningException {
-        File cloneDirectory = new File("clones" + File.separator + repoName);
+    public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
+        Files.createDirectory(Paths.get("clones")); // otherwise, NoSuchFileException from next line
+        File localPath = Files.createTempDirectory(Paths.get("clones"), repoName).toFile();
 
-        try {
-            System.out.println("Cloning " + repo + " into " + cloneDirectory);
-            Git.cloneRepository()
-                    .setURI(repo)
-                    .setDirectory(Paths.get(String.valueOf(cloneDirectory)).toFile())
-                    .call();
-            System.out.println("Completed Cloning");
+        if(!localPath.delete()) {
+            throw new IOException("Could not delete temporary file " + localPath);
+        }
+
+        try (Git git = Git.cloneRepository()
+                .setURI(repo)
+                .setDirectory(localPath )
+                .call()) {
+            System.out.println("Completed Cloning " + repoName);
         } catch (GitAPIException e) {
             throw new GitCloningException(Errors.CLONE_ERROR.getMessage());
         }
+
+        return localPath;
     }
 
-    public static void deleteClone() throws GitCloningException {
-        /*try {
-            File clonePath = new File("clones");
-            clonePath.deleteOnExit();
+    public static void deleteClone(File localPath) throws GitCloningException {
+        try {
+            FileUtils.deleteDirectory(localPath);
         } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-            //throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
-        }*/
-        File clonePath = new File("clones");
-        clonePath.deleteOnExit();
+            System.err.println(e.getMessage());
+        }
     }
 }

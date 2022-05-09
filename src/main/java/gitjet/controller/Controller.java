@@ -7,6 +7,7 @@ import gitjet.model.Repo;
 import gitjet.model.clonerepo.GitCloningException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,10 +16,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Controller {
     public final ObservableList<Repo> reposData = FXCollections.observableArrayList();

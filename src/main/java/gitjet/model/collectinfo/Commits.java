@@ -11,15 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static gitjet.model.FilesList.getFilesList;
 
 public class Commits {
 
     int numberOfContributors = 0;
     int numberOfCommits = 0;
 
-    public void commitsStats(String repoName) throws GitAPIException, IOException {
-        File file = new File("clones/" + repoName);
+    public void commitsStats(File file) throws GitAPIException, IOException {
 
         Git git = Git.open(file);
         Iterable<RevCommit> commits = git.log().all().call();
@@ -48,6 +46,7 @@ public class Commits {
         }
 
         System.out.println(file.getName() + " project checked\n");
+        git.close();
     }
 
     public int getNumberOfCommits() {
