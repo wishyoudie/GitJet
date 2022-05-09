@@ -14,11 +14,15 @@ import java.util.List;
 
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
+import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
+import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
+import static gitjet.model.collectinfo.CheckTests.isTestsInProject;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class ReposHandler {
-    int numberOfCommits, numberofContributors, numberOfLinesInProject, testsInProject,
-            numberOfStringsInTests, readmeInProject;
+    int numberOfCommits, numberofContributors, numberOfLinesInProject,
+            numberOfLinesInTests;
+    boolean testsInProject, readmeInProject;
     double commitsPerContributor;
     List<String> mavenDependencies;
 
@@ -38,10 +42,16 @@ public class ReposHandler {
 
         numberOfLinesInProject = getAmountOfLines(repoName);
 
+        testsInProject = isTestsInProject(repoName);
+        numberOfLinesInProject = getNumberOfLinesInTests(repoName);
+
+        readmeInProject = isReadmeInProject(repoName);
+
         // other classes
 
         System.out.println("Starting deleting process");
         deleteClone();
+        System.out.println("Deleted");
 
         return new Repo(link, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name
     }

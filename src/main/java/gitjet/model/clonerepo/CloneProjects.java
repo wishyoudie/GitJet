@@ -18,7 +18,6 @@ public class CloneProjects {
 
     public static void runCloning(String repo, String repoName) throws GitCloningException {
         File cloneDirectory = new File("clones" + File.separator + repoName);
-//        cloneDirectory.mkdirs();
 
         try {
             System.out.println("Cloning " + repo + " into " + cloneDirectory);
@@ -36,6 +35,7 @@ public class CloneProjects {
         try {
             FileDeleteStrategy.FORCE.delete(new File("clones"));
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
         }
     }
