@@ -4,7 +4,6 @@ module ru.spbstu.gitjet {
     requires org.eclipse.jgit;
     requires org.apache.commons.io;
 
-
     opens gitjet to javafx.fxml;
     opens gitjet.model to javafx.base;
     exports gitjet;

@@ -31,7 +31,7 @@ public class CloneProjects {
 
     public static void deleteClone() throws GitCloningException {
         try {
-            FileUtils.deleteDirectory(new File("clones"));
+            FileUtils.deleteDirectory(new File("../clones"));
         } catch (IOException e) {
             throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
         }

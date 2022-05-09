@@ -133,14 +133,16 @@ public class Controller {
                 new FileChooser.ExtensionFilter("DAT", "*.dat")
         );
         File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            ReposHandler reposHandler = new ReposHandler();
-            while ((line = br.readLine()) != null) {
-                addData(reposHandler.handle(line));
+        if (file != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                ReposHandler reposHandler = new ReposHandler();
+                while ((line = br.readLine()) != null) {
+                    addData(reposHandler.handle(line));
+                }
+            } catch (Exception e) { // Change to IOException
+                throw new IllegalArgumentException(e.getMessage());
             }
-        } catch (Exception e) { // Change to IOException
-            throw new IllegalArgumentException(e.getMessage());
         }
         killWindow(newRepoOpenFileButton);
     }
