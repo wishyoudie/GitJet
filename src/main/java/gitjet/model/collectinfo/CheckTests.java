@@ -8,17 +8,17 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class CheckTests {
 
-    public static boolean isTestsInProject(String repoName) {
-        File pathToCheck = new File("clones/" + repoName + "/test");
+    public static boolean isTestsInProject(File file) {
+        File pathToCheck = new File(file.getPath() + "/test");
         return pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
     }
 
-    public static int getNumberOfLinesInTests(String repoName) throws IOException {
+    public static int getNumberOfLinesInTests(File file) throws IOException {
 
-        if (!isTestsInProject(repoName)) {
+        if (!isTestsInProject(file)) {
             return 0;
         }
 
-        return getAmountOfLines(repoName + "/test");
+        return getAmountOfLines(file);
     }
 }

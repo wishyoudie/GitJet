@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
+import java.util.List;
 
 public class Controller {
     public final ObservableList<Repo> reposData = FXCollections.observableArrayList();
@@ -127,8 +128,8 @@ public class Controller {
         );
         File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
         if (file != null) {
-            ReposHandler reposHandler = new ReposHandler();
-            for (Repo repo : reposHandler.handleTextFile(file)) {
+            List<Repo> repos = new ReposHandler().handleTextFile(file);
+            for (Repo repo : repos) {
                 addData(repo);
             }
         }

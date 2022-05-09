@@ -10,8 +10,7 @@ import java.util.Optional;
 import static gitjet.model.FilesList.getFilesList;
 
 public class LineSize {
-    public static Integer getAmountOfLines(String repoName) throws IOException {
-        File file = new File("clones/" + repoName);
+    public static Integer getAmountOfLines(File file) throws IOException {
 
         Integer stringCounter = 0;
         Integer result = iterateStrings(stringCounter, file);

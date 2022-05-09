@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 public class CloneProjects {
 
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
-        Files.createDirectory(Paths.get("clones")); // otherwise, NoSuchFileException from next line
+        if (!Files.exists(Paths.get("clones"))) {
+            Files.createDirectory(Paths.get("clones")); // otherwise, NoSuchFileException from next line
+        }
         File localPath = Files.createTempDirectory(Paths.get("clones"), repoName).toFile();
 
         if(!localPath.delete()) {

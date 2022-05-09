@@ -40,10 +40,10 @@ public class ReposHandler {
         numberOfCommits = commits.getNumberOfCommits();
         commitsPerContributor = (numberOfCommits * 1.0) / (numberofContributors * 1.0);
 
-        numberOfLinesInProject = getAmountOfLines(repoName);
+        numberOfLinesInProject = getAmountOfLines(clone);
 
-        testsInProject = isTestsInProject(repoName);
-        numberOfLinesInProject = getNumberOfLinesInTests(repoName);
+        testsInProject = isTestsInProject(clone);
+        numberOfLinesInTests = getNumberOfLinesInTests(clone);
 
         readmeInProject = isReadmeInProject(repoName);
 
@@ -59,11 +59,13 @@ public class ReposHandler {
         try {
             List<Repo> repos = new ArrayList<>();
             List<String> links = setUpLinks(file);
+            System.out.println(links);
             for (String link : links) {
                 repos.add(handle(link));
             }
             return repos;
         } catch (GitAPIException | GitCloningException | IOException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         }
     }
