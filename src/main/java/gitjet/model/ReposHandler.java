@@ -1,6 +1,5 @@
 package gitjet.model;
 
-import gitjet.model.clonerepo.DeleteClones;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.Commits;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -10,38 +9,41 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class ReposHandler {
-    int numberOfCommits, numberofContributors, numberOfStringsInProject, testsInProject,
+    int numberOfCommits, numberofContributors, numberOfLinesInProject, testsInProject,
             numberOfStringsInTests, readmeInProject;
     double commitsPerContributor;
     List<String> mavenDependencies;
 
     public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
+
+        String repoName = getRepoName(link);
+
         System.out.println("Starting cloning process");
-        runCloning(link);
-        System.out.println("All repos cloned");
+        runCloning(link, repoName);
 
         Commits commits = new Commits();
-        commits.commitsStats();
+        commits.commitsStats(repoName);
 
         numberofContributors = commits.getNumberOfContributors();
         numberOfCommits = commits.getNumberOfCommits();
         commitsPerContributor = (numberOfCommits * 1.0) / (numberofContributors * 1.0);
 
-        numberOfStringsInProject = getAmountOfLines();
+        numberOfLinesInProject = getAmountOfLines(repoName);
 
         // other classes
 
         System.out.println("Starting deleting process");
-        DeleteClones.delete();
-        System.out.println("All clones deleted");
+        deleteClone();
 
-        return new Repo(link, numberofContributors, numberOfStringsInProject, numberOfCommits); // Saves URL as link name
+        return new Repo(link, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name
     }
 
     public List<Repo> handleTextFile(File file) throws IOException, GitAPIException, GitCloningException {
@@ -53,7 +55,7 @@ public class ReposHandler {
         return repos;
     }
 
-    public static List<String> setUpLinks(File file) throws IOException {
+    private static List<String> setUpLinks(File file) throws IOException {
         List<String> repos = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -63,6 +65,11 @@ public class ReposHandler {
             line = reader.readLine();
         }
         return repos;
+    }
+
+    private static String getRepoName(String link) {
+        List<String> linkSplited = Arrays.asList(link.split("/"));
+        return linkSplited.get(linkSplited.size() - 1);
     }
 
     public List<Repo> readData(String fileName) {

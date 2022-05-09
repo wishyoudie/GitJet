@@ -1,6 +1,7 @@
 package gitjet.model.clonerepo;
 
 import gitjet.model.Errors;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -12,10 +13,9 @@ import java.util.List;
 
 public class CloneProjects {
 
-    public static void runCloning(String repo) throws GitCloningException {
-        String repoName = repoNameFromLink(repo);
+    public static void runCloning(String repo, String repoName) throws GitCloningException {
         File cloneDirectory = new File("clones/" + repoName);
-        cloneDirectory.mkdirs();
+//        cloneDirectory.mkdirs();
 
         try {
             System.out.println("Cloning " + repo + " into " + cloneDirectory);
@@ -29,8 +29,11 @@ public class CloneProjects {
         }
     }
 
-    private static String repoNameFromLink(String link) {
-        List<String> linkSplited = Arrays.asList(link.split("/"));
-        return linkSplited.get(linkSplited.size() - 1);
+    public static void deleteClone() throws GitCloningException {
+        try {
+            FileUtils.deleteDirectory(new File("clones"));
+        } catch (IOException e) {
+            throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
+        }
     }
 }

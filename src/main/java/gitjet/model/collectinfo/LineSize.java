@@ -10,27 +10,16 @@ import java.util.Optional;
 import static gitjet.model.FilesList.getFilesList;
 
 public class LineSize {
-    public static Integer getAmountOfLines() throws IOException {
-        File clonesDirectory = new File("clones");
-        File[] allClones = getFilesList(clonesDirectory);
+    public static Integer getAmountOfLines(String repoName) throws IOException {
+        File file = new File("clones/" + repoName);
 
-        int averageSize = 0;
+        Integer stringCounter = 0;
+        Integer result = iterateStrings(stringCounter, file);
+        System.out.println(file.getName() + " size is: " + result + " lines");
 
-        for (File file : allClones) {
-
-            if (file.isHidden()) {
-                continue;
-            }
-
-            Integer stringCounter = 0;
-            Integer result = iterateStrings(stringCounter, file);
-            averageSize += result;
-            System.out.println(file.getName() + " size is: " + result + " lines");
-        }
-
-        return averageSize / allClones.length;
-
+        return result;
     }
+
 
     private static Integer iterateStrings(Integer counter, File path) throws IOException {
         File[] filesList = getFilesList(path);
