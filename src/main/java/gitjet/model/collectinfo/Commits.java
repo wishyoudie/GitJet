@@ -15,12 +15,12 @@ import static gitjet.model.FilesList.getFilesList;
 
 public class Commits {
 
-    public static List<Integer> commitsStats() throws GitAPIException, IOException {
+    int numberOfContributors = 0;
+    int numberOfCommits = 0;
+
+    public void commitsStats() throws GitAPIException, IOException {
         File clonesDirectory = new File("clones");
         File[] allClones = getFilesList(clonesDirectory);
-
-        int numberOfContributors = 0;
-        int numberOfCommits = 0;
 
         for(File file : allClones) {
 
@@ -56,11 +56,13 @@ public class Commits {
 
             System.out.println(file.getName() + " project checked\n");
         }
+    }
 
-        List<Integer> results = new ArrayList<>();
-        results.add(numberOfContributors / allClones.length);
-        results.add(numberOfCommits / allClones.length);
-        results.add(numberOfCommits / numberOfContributors);
-        return results;
+    public int getNumberOfCommits() {
+        return numberOfCommits;
+    }
+
+    public int getNumberOfContributors() {
+        return numberOfContributors;
     }
 }
