@@ -7,7 +7,6 @@ import gitjet.model.Repo;
 import gitjet.model.clonerepo.GitCloningException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,13 +15,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import org.apache.commons.io.FileDeleteStrategy;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Controller {
     public final ObservableList<Repo> reposData = FXCollections.observableArrayList();
@@ -70,13 +65,6 @@ public class Controller {
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-    }
-
-    /**
-     * Reload controller.
-     */
-    private void reload() {
-        initialize();
     }
 
     @FXML
@@ -139,14 +127,9 @@ public class Controller {
         );
         File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
         if (file != null) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                ReposHandler reposHandler = new ReposHandler();
-                while ((line = br.readLine()) != null) {
-                    addData(reposHandler.handle(line));
-                }
-            } catch (Exception e) { // Change to IOException
-                throw new IllegalArgumentException(e.getMessage());
+            ReposHandler reposHandler = new ReposHandler();
+            for (Repo repo : reposHandler.handleTextFile(file)) {
+                addData(repo);
             }
         }
         killWindow(newRepoOpenFileButton);

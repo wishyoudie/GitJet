@@ -49,32 +49,34 @@ public class ReposHandler {
 
         // other classes
 
-        System.out.println("Starting deleting process");
         deleteClone(clone);
         System.out.println("Deleted");
 
-        return new Repo(repoName, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name
+        return new Repo(repoName, numberofContributors, numberOfLinesInProject, numberOfCommits);
     }
 
-    public List<Repo> handleTextFile(File file) throws IOException, GitAPIException, GitCloningException {
-        List<String> links = setUpLinks(file);
-        List<Repo> repos = new ArrayList<>();
-        for (String link : links) {
-            repos.add(handle(link));
+    public List<Repo> handleTextFile(File file) {
+        try {
+            List<Repo> repos = new ArrayList<>();
+            List<String> links = setUpLinks(file);
+            for (String link : links) {
+                repos.add(handle(link));
+            }
+            return repos;
+        } catch (GitAPIException | GitCloningException | IOException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
-        return repos;
     }
 
     private static List<String> setUpLinks(File file) throws IOException {
-        List<String> repos = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-
-        String line = reader.readLine();
-        while (line != null) {
-            repos.add(line);
-            line = reader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> repos = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                repos.add(line);
+            }
+            return repos;
         }
-        return repos;
     }
 
     private static String getRepoName(String link) {
@@ -91,7 +93,7 @@ public class ReposHandler {
             }
             return result;
         } catch (IOException e) {
-            throw new IllegalArgumentException("NO data");
+            throw new IllegalArgumentException("No data");
         }
     }
 }
