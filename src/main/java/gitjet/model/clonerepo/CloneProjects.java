@@ -1,11 +1,14 @@
 package gitjet.model.clonerepo;
 
 import gitjet.model.Errors;
+import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +34,7 @@ public class CloneProjects {
 
     public static void deleteClone() throws GitCloningException {
         try {
-            FileUtils.deleteDirectory(new File("clones"));
+            FileDeleteStrategy.FORCE.delete(new File("clones"));
         } catch (IOException e) {
             throw new GitCloningException(Errors.DELETE_ERROR.getMessage());
         }
