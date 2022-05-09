@@ -20,12 +20,11 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void stop() {
-
+        File clonePath = new File("clones");
+        clonePath.deleteOnExit();
     }
 
     public static void main(String[] args) {
         launch();
-        File clonePath = new File("clones");
-        clonePath.deleteOnExit();
     }
 }

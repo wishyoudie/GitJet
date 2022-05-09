@@ -53,7 +53,7 @@ public class ReposHandler {
         deleteClone(clone);
         System.out.println("Deleted");
 
-        return new Repo(link, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name
+        return new Repo(repoName, numberofContributors, numberOfLinesInProject, numberOfCommits); // Saves URL as link name
     }
 
     public List<Repo> handleTextFile(File file) throws IOException, GitAPIException, GitCloningException {
@@ -78,8 +78,8 @@ public class ReposHandler {
     }
 
     private static String getRepoName(String link) {
-        List<String> linkSplited = Arrays.asList(link.split("/"));
-        return linkSplited.get(linkSplited.size() - 1);
+        List<String> linkSplit = Arrays.asList(link.split("/"));
+        return linkSplit.get(linkSplit.size() - 1);
     }
 
     public List<Repo> readData(String fileName) {
