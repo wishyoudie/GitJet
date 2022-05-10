@@ -18,13 +18,14 @@ import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
-import static gitjet.model.collectinfo.CheckTests.isTestsInProject;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class ReposHandler {
-    int numberOfCommits, numberofContributors, numberOfLinesInProject,
+    int numberOfCommits,
+            numberOfContributors,
+            numberOfLinesInProject,
             numberOfLinesInTests;
-    boolean testsInProject, readmeInProject;
+    boolean readmeInProject;
     double commitsPerContributor;
     Set<String> mavenDependencies;
 
@@ -38,13 +39,12 @@ public class ReposHandler {
         Commits commits = new Commits();
         commits.commitsStats(clone);
 
-        numberofContributors = commits.getNumberOfContributors();
+        numberOfContributors = commits.getNumberOfContributors();
         numberOfCommits = commits.getNumberOfCommits();
-        commitsPerContributor = (numberOfCommits * 1.0) / (numberofContributors * 1.0);
+        commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
 
         numberOfLinesInProject = getAmountOfLines(clone);
 
-        testsInProject = isTestsInProject(clone);
         numberOfLinesInTests = getNumberOfLinesInTests(clone);
 
         readmeInProject = isReadmeInProject(clone);
@@ -54,7 +54,7 @@ public class ReposHandler {
         deleteClone(clone);
         System.out.println("Deleted");
 
-        return new Repo(repoName, numberofContributors, numberOfLinesInProject, numberOfCommits);
+        return new Repo(repoName, numberOfContributors, numberOfCommits, numberOfLinesInProject, numberOfLinesInTests, readmeInProject, mavenDependencies);
     }
 
     public List<Repo> handleTextFile(File file) {

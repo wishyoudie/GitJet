@@ -14,7 +14,6 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem fx:id="fileNewMenuItem" mnemonicParsing="false" onAction="#fileNewMenuItemClick" text="New" />
-                        <MenuItem fx:id="fileSaveMenuItem" mnemonicParsing="false" onAction="#fileSaveMenuItemClick" text="Save" />
                         <MenuItem fx:id="fileClearMenuItem" mnemonicParsing="false" onAction="#fileClearMenuItemClick" text="Clear" />
                     </items>
                 </Menu>
@@ -24,9 +23,13 @@
    <center>
       <TableView fx:id="tableRepos" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
-          <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
+            <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
+            <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
+            <TableColumn fx:id="commitsColumn" prefWidth="75.0" text="Commits" />
             <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
+            <TableColumn fx:id="testLinesColumn" prefWidth="100.0" text="Lines in tests" />
+            <TableColumn fx:id="readMeColumn" prefWidth="100.0" text="Has README file" />
+            <TableColumn fx:id="dependenciesColumn" prefWidth="300.0" text="Dependencies" />
         </columns>
       </TableView>
    </center>

@@ -1,21 +1,27 @@
 package gitjet.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Repo {
 
     private String name;
     private int numberOfContributors;
-    private int amountOfLines;
     private int numberOfCommits;
+    private int numberOfLinesInProject;
+    private int numberOfLinesInTests;
+    private String readmeInProject;
+    private final Set<String> mavenDependencies = new HashSet<>();
 
-    public Repo(String name, int numberOfContributors, int amountOfLines, int numberOfCommits) {
+    public Repo(String name,
+                int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, int numberOfLinesInTests,
+                boolean readmeInProject, Set<String> mavenDependencies) {
         this.name = name;
         this.numberOfContributors = numberOfContributors;
-        this.amountOfLines = amountOfLines;
         this.numberOfCommits = numberOfCommits;
+        this.numberOfLinesInProject = numberOfLinesInProject;
+        this.numberOfLinesInTests = numberOfLinesInTests;
+        this.readmeInProject = refactorReadMe(readmeInProject);
+        this.mavenDependencies.addAll(mavenDependencies);
     }
 
     public Repo() {
@@ -26,8 +32,13 @@ public class Repo {
         List<String> parts = new ArrayList<>(Arrays.asList(rawParts));
         this.name = parts.get(0);
         this.numberOfContributors = Integer.parseInt(parts.get(1));
-        this.amountOfLines = Integer.parseInt(parts.get(2));
-        this.numberOfCommits = Integer.parseInt(parts.get(3));
+        this.numberOfCommits = Integer.parseInt(parts.get(2));
+        this.numberOfLinesInProject = Integer.parseInt(parts.get(3));
+        this.numberOfLinesInTests = Integer.parseInt(parts.get(4));
+        this.readmeInProject = parts.get(5);
+        for (int i = 6; i < parts.size(); i++) {
+            this.mavenDependencies.add(parts.get(i));
+        }
     }
 
     public String getName() {
@@ -46,14 +57,6 @@ public class Repo {
         this.numberOfContributors = numberOfContributors;
     }
 
-    public int getAmountOfLines() {
-        return this.amountOfLines;
-    }
-
-    public void setAmountOfLines(int amountOfLines) {
-        this.amountOfLines = amountOfLines;
-    }
-
     public int getNumberOfCommits() {
         return this.numberOfCommits;
     }
@@ -62,8 +65,61 @@ public class Repo {
         this.numberOfCommits = numberOfCommits;
     }
 
+    public int getNumberOfLinesInProject() {
+        return this.numberOfLinesInProject;
+    }
+
+    public void setNumberOfLinesInProject(int amountOfLines) {
+        this.numberOfLinesInProject = amountOfLines;
+    }
+
+    public int getNumberOfLinesInTests() {
+        return this.numberOfLinesInTests;
+    }
+
+    public void setNumberOfLinesInTests(int amountOfLines) {
+        this.numberOfLinesInTests = amountOfLines;
+    }
+
+    public String getReadmeInProject() {
+        return this.readmeInProject;
+    }
+
+    public boolean isReadmeInProject() {
+        return Objects.equals(this.readmeInProject, "+");
+    }
+
+    public void setReadmeInProject(boolean readmeInProject) {
+        this.readmeInProject = refactorReadMe(readmeInProject);
+    }
+
+    public void setReadmeInProject(String readmeInProject) {
+        this.readmeInProject = readmeInProject;
+    }
+
+    public Set<String> getMavenDependencies() {
+        return this.mavenDependencies;
+    }
+
+    public void setMavenDependencies(Set<String> mavenDependencies) {
+        this.mavenDependencies.addAll(mavenDependencies);
+    }
+
+    private String refactorReadMe(boolean condition) {
+        if (condition)
+            return "+";
+        return "-";
+    }
+
     @Override
     public String toString() {
-        return String.format("%s %d %d %d", this.name, this.numberOfContributors, this.amountOfLines, this.numberOfCommits);
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s %d %d %d %d %s", this.name, this.numberOfContributors, this.numberOfCommits, this.numberOfLinesInProject,
+                this.numberOfLinesInTests, this.readmeInProject));
+        for (String dep : mavenDependencies) {
+            sb.append(" ");
+            sb.append(dep);
+        }
+        return sb.toString();
     }
 }
