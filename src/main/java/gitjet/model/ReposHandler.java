@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
+import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
 import static gitjet.model.collectinfo.CheckTests.isTestsInProject;
@@ -24,7 +26,7 @@ public class ReposHandler {
             numberOfLinesInTests;
     boolean testsInProject, readmeInProject;
     double commitsPerContributor;
-    List<String> mavenDependencies;
+    Set<String> mavenDependencies;
 
     public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
 
@@ -45,9 +47,9 @@ public class ReposHandler {
         testsInProject = isTestsInProject(clone);
         numberOfLinesInTests = getNumberOfLinesInTests(clone);
 
-        readmeInProject = isReadmeInProject(repoName);
+        readmeInProject = isReadmeInProject(clone);
 
-        // other classes
+        mavenDependencies = getDependencies(clone);
 
         deleteClone(clone);
         System.out.println("Deleted");

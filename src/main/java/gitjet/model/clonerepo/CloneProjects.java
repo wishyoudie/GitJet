@@ -7,15 +7,17 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class CloneProjects {
 
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
-        if (!Files.exists(Paths.get("clones"))) {
-            Files.createDirectory(Paths.get("clones")); // otherwise, NoSuchFileException from next line
+        Path path = Path.of("clones");
+        if (!Files.exists(path)) {
+            Files.createDirectory(path); // otherwise, NoSuchFileException from next line
         }
-        File localPath = Files.createTempDirectory(Paths.get("clones"), repoName).toFile();
+        File localPath = Files.createTempDirectory(path, repoName).toFile();
 
         if(!localPath.delete()) {
             throw new IOException("Could not delete temporary file " + localPath);

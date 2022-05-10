@@ -14,7 +14,7 @@ public class LineSize {
 
         Integer stringCounter = 0;
         Integer result = iterateStrings(stringCounter, file);
-        System.out.println(file.getName() + " size is: " + result + " lines");
+        System.out.println("Line size is: " + result);
 
         return result;
     }
