@@ -8,7 +8,7 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class CheckTests {
 
-    public static File pathToTests(File file) {
+    private static File pathToTests(File file) {
         File pathToCheck = new File(file + File.separator + "test");
         if (pathToCheck.exists()) {
             return pathToCheck;
