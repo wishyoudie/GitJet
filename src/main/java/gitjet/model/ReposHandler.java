@@ -21,13 +21,6 @@ import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class ReposHandler {
-    int numberOfCommits,
-            numberOfContributors,
-            numberOfLinesInProject,
-            numberOfLinesInTests;
-    boolean readmeInProject;
-    double commitsPerContributor;
-    Set<String> mavenDependencies;
 
     public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
 
@@ -39,17 +32,17 @@ public class ReposHandler {
         Commits commits = new Commits();
         commits.commitsStats(clone);
 
-        numberOfContributors = commits.getNumberOfContributors();
-        numberOfCommits = commits.getNumberOfCommits();
-        commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
+        int numberOfContributors = commits.getNumberOfContributors();
+        int numberOfCommits = commits.getNumberOfCommits();
+        double commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
 
-        numberOfLinesInProject = getAmountOfLines(clone);
+        int numberOfLinesInProject = getAmountOfLines(clone);
 
-        numberOfLinesInTests = getNumberOfLinesInTests(clone);
+        int numberOfLinesInTests = getNumberOfLinesInTests(clone);
 
-        readmeInProject = isReadmeInProject(clone);
+        boolean readmeInProject = isReadmeInProject(clone);
 
-        mavenDependencies = getDependencies(clone);
+        Set<String> mavenDependencies = getDependencies(clone);
 
         deleteClone(clone);
         System.out.println("Deleted");
