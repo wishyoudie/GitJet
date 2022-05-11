@@ -9,18 +9,20 @@ public class Repo {
     private int numberOfCommits;
     private int numberOfLinesInProject;
     private int numberOfLinesInTests;
-    private String readmeInProject;
+    private String hasTests;
+    private String hasReadMe;
     private final Set<String> mavenDependencies = new HashSet<>();
 
     public Repo(String name,
-                int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, int numberOfLinesInTests,
+                int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, boolean testInProject, int numberOfLinesInTests,
                 boolean readmeInProject, Set<String> mavenDependencies) {
         this.name = name;
         this.numberOfContributors = numberOfContributors;
         this.numberOfCommits = numberOfCommits;
         this.numberOfLinesInProject = numberOfLinesInProject;
         this.numberOfLinesInTests = numberOfLinesInTests;
-        this.readmeInProject = refactorReadMe(readmeInProject);
+        this.hasTests = refactorBoolean(testInProject);
+        this.hasReadMe = refactorBoolean(readmeInProject);
         this.mavenDependencies.addAll(mavenDependencies);
     }
 
@@ -34,9 +36,10 @@ public class Repo {
         this.numberOfContributors = Integer.parseInt(parts.get(1));
         this.numberOfCommits = Integer.parseInt(parts.get(2));
         this.numberOfLinesInProject = Integer.parseInt(parts.get(3));
-        this.numberOfLinesInTests = Integer.parseInt(parts.get(4));
-        this.readmeInProject = parts.get(5);
-        for (int i = 6; i < parts.size(); i++) {
+        this.hasTests = parts.get(4);
+        this.numberOfLinesInTests = Integer.parseInt(parts.get(5));
+        this.hasReadMe = parts.get(6);
+        for (int i = 7; i < parts.size(); i++) {
             this.mavenDependencies.add(parts.get(i));
         }
     }
@@ -73,6 +76,18 @@ public class Repo {
         this.numberOfLinesInProject = amountOfLines;
     }
 
+    public String getHasTests() {
+        return this.hasTests;
+    }
+
+    public boolean hasTests() {
+        return Objects.equals(this.hasTests, "+");
+    }
+
+    public void setHasTests(boolean hasTests) {
+        this.hasTests = refactorBoolean(hasTests);
+    }
+
     public int getNumberOfLinesInTests() {
         return this.numberOfLinesInTests;
     }
@@ -81,20 +96,20 @@ public class Repo {
         this.numberOfLinesInTests = amountOfLines;
     }
 
-    public String getReadmeInProject() {
-        return this.readmeInProject;
+    public String getHasReadMe() {
+        return this.hasReadMe;
     }
 
-    public boolean isReadmeInProject() {
-        return Objects.equals(this.readmeInProject, "+");
+    public boolean hasReadMe() {
+        return Objects.equals(this.hasReadMe, "+");
     }
 
-    public void setReadmeInProject(boolean readmeInProject) {
-        this.readmeInProject = refactorReadMe(readmeInProject);
+    public void setHasReadMe(boolean hasReadMe) {
+        this.hasReadMe = refactorBoolean(hasReadMe);
     }
 
     public void setReadmeInProject(String readmeInProject) {
-        this.readmeInProject = readmeInProject;
+        this.hasReadMe = readmeInProject;
     }
 
     public Set<String> getMavenDependencies() {
@@ -105,7 +120,7 @@ public class Repo {
         this.mavenDependencies.addAll(mavenDependencies);
     }
 
-    private String refactorReadMe(boolean condition) {
+    private String refactorBoolean(boolean condition) {
         if (condition)
             return "+";
         return "-";
@@ -114,8 +129,8 @@ public class Repo {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s %d %d %d %d %s", this.name, this.numberOfContributors, this.numberOfCommits, this.numberOfLinesInProject,
-                this.numberOfLinesInTests, this.readmeInProject));
+        sb.append(String.format("%s %d %d %d %s %d %s", this.name, this.numberOfContributors, this.numberOfCommits, this.numberOfLinesInProject,
+                this.hasTests, this.numberOfLinesInTests, this.hasReadMe));
         for (String dep : mavenDependencies) {
             sb.append(" ");
             sb.append(dep);

@@ -47,6 +47,12 @@ public class TableController {
     private TableColumn<Repo, Integer> linesColumn;
 
     /**
+     * Repository has tests column.
+     */
+    @FXML
+    private TableColumn<Repo, String> hasTestsColumn;
+
+    /**
      * Total number of lines in tests in repository column.
      */
     @FXML
@@ -76,8 +82,9 @@ public class TableController {
             contributorsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfContributors"));
             commitsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfCommits"));
             linesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInProject"));
+            hasTestsColumn.setCellValueFactory(new PropertyValueFactory<>("hasTests"));
             testLinesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInTests"));
-            readMeColumn.setCellValueFactory(new PropertyValueFactory<>("readmeInProject"));
+            readMeColumn.setCellValueFactory(new PropertyValueFactory<>("hasReadMe"));
             dependenciesColumn.setCellValueFactory(new PropertyValueFactory<>("mavenDependencies"));
 
             tableRepos.setItems(reposData);
