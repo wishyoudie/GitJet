@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="body" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.StartController">
+   <children>
+      <HBox prefHeight="360.0" prefWidth="1280.0">
+         <children>
+            <ImageView fitHeight="167.0" fitWidth="750.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="265.0" top="83.0" />
+               </HBox.margin>
+            </ImageView>
+         </children></HBox>
+      <HBox prefHeight="170.0" prefWidth="1280.0" spacing="23.4">
+         <children>
+            <ImageView fx:id="newButton" fitHeight="170.0" fitWidth="170.0" onMouseClicked="#newButtonClick" onMouseEntered="#newButtonHover" onMouseExited="#buttonExited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/button_new.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="lookButton" fitHeight="170.0" fitWidth="170.0" onMouseClicked="#lookButtonClick" onMouseEntered="#lookButtonHover" onMouseExited="#buttonExited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/button_look.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="refreshButton" fitHeight="170.0" fitWidth="170.0" onMouseClicked="#refreshButtonClick" onMouseEntered="#refreshButtonHover" onMouseExited="#buttonExited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/button_refresh.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="clearButton" fitHeight="170.0" fitWidth="170.0" onMouseClicked="#clearButtonClick" onMouseEntered="#clearButtonHover" onMouseExited="#buttonExited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/button_clear.png" />
+               </image>
+            </ImageView>
+         </children>
+         <VBox.margin>
+            <Insets left="265.0" />
+         </VBox.margin></HBox>
+      <HBox prefHeight="170.0" prefWidth="1280.0">
+         <children>
+            <Label fx:id="hintText" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefWidth="750.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="265.0" top="30.0" />
+               </HBox.margin>
+            </Label>
+         </children></HBox>
+   </children>
+</VBox>

@@ -12,7 +12,7 @@
       <HBox alignment="CENTER" spacing="10">
          <children>
             <TextField fx:id="newRepoField" layoutX="226.0" layoutY="194.0" promptText="Enter URL here" />
-            <Button fx:id="newRepoButton" mnemonicParsing="false" text="Submit" onAction="#newRepoFieldInsert"/>
+            <Button fx:id="newRepoButton" mnemonicParsing="false" text="Submit" onAction="#newRepoSubmit"/>
          </children>
          <padding>
             <Insets bottom="40.0" left="60.0" right="60.0" top="40.0" />
@@ -20,7 +20,7 @@
       </HBox>
       <HBox alignment="CENTER">
          <children>
-            <Button fx:id="newRepoOpenFileButton" mnemonicParsing="false" onAction="#newRepoOpenFileClick" text="Open file">
+            <Button fx:id="newRepoOpenFileButton" mnemonicParsing="false" onAction="#newRepoFile" text="Open file">
                <font>
                   <Font size="14.0" />
                </font>
