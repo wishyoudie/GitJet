@@ -8,21 +8,28 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class CheckTests {
 
-    public static boolean isTestsInProject(File file) {
+    public static File pathToTests(File file) {
         File pathToCheck = new File(file + File.separator + "test");
-
-        boolean result = pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
-        System.out.println("Tests in project: " + result);
-        return result;
+        if (pathToCheck.exists()) {
+            return pathToCheck;
+        } else {
+            pathToCheck = new File(file + File.separator + "src" + File.separator + "test");
+            if (pathToCheck.exists()) {
+                return pathToCheck;
+            } else {
+                return null;
+            }
+        }
     }
 
     public static int getNumberOfLinesInTests(File file) throws IOException {
 
-        if (!isTestsInProject(file)) {
+        File path = pathToTests(file);
+        if (path == null) {
             return 0;
         }
 
-        int result = getAmountOfLines(new File(file + File.separator + "test"));
+        int result = getAmountOfLines(path);
         System.out.println("Tests size: " + result);
         return result;
     }
