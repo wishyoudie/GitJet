@@ -54,7 +54,7 @@ public class ReposHandler {
         deleteClone(clone);
         System.out.println("Deleted");
 
-        return new Repo(repoName, numberOfContributors, numberOfCommits, numberOfLinesInProject, numberOfLinesInTests, readmeInProject, mavenDependencies);
+        return new Repo(repoName, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
     }
 
     public List<Repo> handleTextFile(File file) {

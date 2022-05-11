@@ -14,6 +14,7 @@
             <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
             <TableColumn fx:id="commitsColumn" prefWidth="75.0" text="Commits" />
             <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
+            <TableColumn fx:id="hasTestsColumn" prefWidth="75.0" text="Has tests" />
             <TableColumn fx:id="testLinesColumn" prefWidth="100.0" text="Lines in tests" />
             <TableColumn fx:id="readMeColumn" prefWidth="100.0" text="Has README file" />
             <TableColumn fx:id="dependenciesColumn" prefWidth="300.0" text="Dependencies" />

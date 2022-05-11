@@ -10,6 +10,7 @@ public class CheckTests {
 
     public static boolean isTestsInProject(File file) {
         File pathToCheck = new File(file + File.separator + "test");
+
         boolean result = pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
         System.out.println("Tests in project: " + result);
         return result;
