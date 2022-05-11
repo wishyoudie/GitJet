@@ -9,7 +9,13 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 public class CheckTests {
 
     public static boolean isTestsInProject(File file) {
+
         File pathToCheck = new File(file + File.separator + "test");
+
+        if (!pathToCheck.exists()) {
+            pathToCheck = new File(file + File.separator + "src" + File.separator + "test");
+        }
+
         boolean result = pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
         System.out.println("Tests in project: " + result);
         return result;
@@ -21,7 +27,13 @@ public class CheckTests {
             return 0;
         }
 
-        int result = getAmountOfLines(new File(file + File.separator + "test"));
+        File pathToCheck = new File(file + File.separator + "test");
+
+        if (!pathToCheck.exists()) {
+            pathToCheck = new File(file + File.separator + "src" + File.separator + "test");
+        }
+
+        int result = getAmountOfLines(pathToCheck);
         System.out.println("Tests size: " + result);
         return result;
     }
