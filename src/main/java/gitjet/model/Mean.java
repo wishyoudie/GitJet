@@ -24,7 +24,7 @@ public class Mean {
             numberOfLinesInProject += repo.getNumberOfLinesInProject();
             numberOfLinesInTests += repo.getNumberOfLinesInTests();
 
-            if (repo.isReadmeInProject()) {
+            if (repo.hasReadMe()) {
                 numberOfReadmes += 1;
             }
 

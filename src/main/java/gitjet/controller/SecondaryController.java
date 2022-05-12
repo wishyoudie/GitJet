@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Secondary windows controller class.
  */
-public class Controller {
+public class SecondaryController {
 
     /**
      * Text field in adding new repository window.
@@ -48,7 +48,7 @@ public class Controller {
      */
     private void addData(Repo repo) {
         try (Writer writer = new BufferedWriter(new FileWriter("data.dat", true))) {
-            writer.append(repo.toString()).append("\n");
+            writer.append(repo.toString()).append("\n"); // change to line end (different op systems)
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open 'data.dat' file.");
         }

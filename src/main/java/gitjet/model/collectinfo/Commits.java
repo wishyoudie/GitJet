@@ -32,7 +32,7 @@ public class Commits {
                     commitsPerContributors.put(contributorName, newNumber);
                 }
 
-                numberOfCommits += 1;
+                numberOfCommits++;
             }
 
             System.out.println("Number of contributors: " + commitsPerContributors.size() + "\n");
@@ -43,7 +43,8 @@ public class Commits {
                 System.out.println(entry.getKey() + " = " + entry.getValue());
             }
             // System.out.println(file.getName() + " project checked\n");
-        } catch (IOException | GitAPIException e) {
+        } catch (IOException | GitAPIException e) { // maybe handle gitapiex
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         }
     }
