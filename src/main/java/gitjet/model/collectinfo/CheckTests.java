@@ -10,15 +10,24 @@ public class CheckTests {
 
     public static boolean isTestsInProject(File file) {
 
-        File pathToCheck = new File(file + File.separator + "test");
+        File pathToCheck = getFirstPath(file);
 
         if (!pathToCheck.exists()) {
-            pathToCheck = new File(file + File.separator + "src" + File.separator + "test");
+            pathToCheck = getSecondPath(file);
         }
 
         boolean result = pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
         System.out.println("Tests in project: " + result);
         return result;
+    }
+
+    private static File getFirstPath(File file) {
+        return new File(file + File.separator + "test");
+    }
+
+    private static File getSecondPath(File file) {
+        return new File(file + File.separator + "src" + File.separator + "test");
+
     }
 
     public static int getNumberOfLinesInTests(File file) throws IOException {
