@@ -9,7 +9,15 @@ import java.util.Set;
 public class AnalyzePom {
 
     public static Set<String> getDependencies(File file) throws IOException {
+
         File pom = new File(file + File.separator + "pom.xml");
+
+        if (!pom.exists()) {
+            Set<String> dependencies = new HashSet<>();
+            dependencies.add("No pom :(");
+            return dependencies;
+        }
+
         try (BufferedReader reader = new BufferedReader(new FileReader(pom))) {
             boolean dependenciesOpened = false;
             String line;
@@ -29,6 +37,11 @@ public class AnalyzePom {
             System.out.println("Dependencies: " + dependencies);
             return dependencies;
         }
+    }
+
+    public static boolean isMavenRepository(File file) {
+        File pom = new File(file + File.separator + "pom.xml");
+        return pom.exists();
     }
 
 }
