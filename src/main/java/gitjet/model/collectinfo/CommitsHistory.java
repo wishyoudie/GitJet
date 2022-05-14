@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Commits {
+public class CommitsHistory {
 
     int numberOfContributors = 0;
     int numberOfCommits = 0;

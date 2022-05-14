@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-import static gitjet.model.FilesList.getFilesList;
+import static gitjet.Utils.getFilesArray;
 
 public class LineSize {
     public static Integer getAmountOfLines(File file) throws IOException {
@@ -21,7 +21,7 @@ public class LineSize {
 
 
     private static Integer iterateStrings(Integer counter, File path) throws IOException {
-        File[] filesList = getFilesList(path);
+        File[] filesList = getFilesArray(path);
         for (File file : filesList) {
             if (file.isDirectory()) {
                 counter += iterateStrings(0, new File(String.valueOf(file)));

@@ -2,47 +2,40 @@ package gitjet.model.collectinfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
+import static gitjet.Utils.getFilesArray;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class CheckTests {
 
-    public static boolean isTestsInProject(File file) {
+    private File testsDirectory;
 
-        File pathToCheck = getFirstPath(file);
+    private void findTests(File file) {
+        File[] filesArray = getFilesArray(file);
 
-        if (!pathToCheck.exists()) {
-            pathToCheck = getSecondPath(file);
+        for (File currentFile : filesArray) {
+            if (currentFile.isDirectory()) {
+                if (currentFile.getName().toLowerCase().contains("test")) {
+                    testsDirectory = currentFile;
+                } else {
+                    findTests(currentFile);
+                }
+            }
         }
 
-        boolean result = pathToCheck.exists() && Objects.requireNonNull(pathToCheck.list()).length != 0;
-        System.out.println("Tests in project: " + result);
-        return result;
+        testsDirectory = null;
     }
 
-    private static File getFirstPath(File file) {
-        return new File(file + File.separator + "test");
-    }
+    public int getNumberOfLinesInTests(File file) throws IOException {
+        findTests(file);
 
-    private static File getSecondPath(File file) {
-        return new File(file + File.separator + "src" + File.separator + "test");
-
-    }
-
-    public static int getNumberOfLinesInTests(File file) throws IOException {
-
-        if (!isTestsInProject(file)) {
+        if (testsDirectory == null) {
             return 0;
         }
 
-        File pathToCheck = new File(file + File.separator + "test");
-
-        if (!pathToCheck.exists()) {
-            pathToCheck = new File(file + File.separator + "src" + File.separator + "test");
-        }
-
-        int result = getAmountOfLines(pathToCheck);
+        int result = getAmountOfLines(testsDirectory);
         System.out.println("Tests size: " + result);
         return result;
     }

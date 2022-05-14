@@ -1,7 +1,8 @@
 package gitjet.model;
 
 import gitjet.model.clonerepo.GitCloningException;
-import gitjet.model.collectinfo.Commits;
+import gitjet.model.collectinfo.CheckTests;
+import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -17,7 +18,6 @@ import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
 import static gitjet.model.collectinfo.AnalyzePom.isMavenRepository;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
-import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class ReposHandler {
@@ -30,19 +30,22 @@ public class ReposHandler {
         File clone = runCloning(link, repoName);
 
         if (!isMavenRepository(clone)) {
+            System.out.println("Not Maven project");
+            deleteClone(clone);
             return new Repo(null, 0, 0, 0, false, 0, false, new HashSet<>());
         }
 
-        Commits commits = new Commits();
-        commits.commitsStats(clone);
+        CommitsHistory commitsHistory = new CommitsHistory();
+        commitsHistory.commitsStats(clone);
 
-        int numberOfContributors = commits.getNumberOfContributors();
-        int numberOfCommits = commits.getNumberOfCommits();
+        int numberOfContributors = commitsHistory.getNumberOfContributors();
+        int numberOfCommits = commitsHistory.getNumberOfCommits();
         double commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
 
         int numberOfLinesInProject = getAmountOfLines(clone);
 
-        int numberOfLinesInTests = getNumberOfLinesInTests(clone);
+        CheckTests checkTests = new CheckTests();
+        int numberOfLinesInTests = checkTests.getNumberOfLinesInTests(clone);
 
         boolean readmeInProject = isReadmeInProject(clone);
 
