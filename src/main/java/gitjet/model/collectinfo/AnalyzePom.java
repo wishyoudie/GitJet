@@ -12,12 +12,6 @@ public class AnalyzePom {
 
         File pom = new File(file + File.separator + "pom.xml");
 
-        if (!pom.exists()) {
-            Set<String> dependencies = new HashSet<>();
-            dependencies.add("No pom :(");
-            return dependencies;
-        }
-
         try (BufferedReader reader = new BufferedReader(new FileReader(pom))) {
             boolean dependenciesOpened = false;
             String line;
