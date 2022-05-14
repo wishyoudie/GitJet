@@ -1,22 +1,20 @@
 package gitjet.controller;
 
-import gitjet.model.ReposHandler;
 import gitjet.model.Repo;
-
+import gitjet.model.ReposHandler;
 import gitjet.model.clonerepo.GitCloningException;
+import gitjet.Utils;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
 import java.util.List;
 
-/**
- * Secondary windows controller class.
- */
-public class SecondaryController {
+public class AddRepoController {
 
     /**
      * Text field in adding new repository window.
@@ -29,18 +27,6 @@ public class SecondaryController {
      */
     @FXML
     private Button newRepoOpenFileButton;
-
-    /**
-     * 'Yes' button in clearing data window.
-     */
-    @FXML
-    private Button clearProceedButton;
-
-    /**
-     * 'No' button in clearing data window.
-     */
-    @FXML
-    private Button clearCancelButton;
 
     /**
      * Add repository to storage.
@@ -63,7 +49,7 @@ public class SecondaryController {
         String newRepoTextUrl = newRepoField.getText();
         Repo repo = new ReposHandler().handle(newRepoTextUrl);
         addData(repo);
-        killWindow(newRepoField);
+        Utils.killWindow(newRepoField);
     }
 
     /**
@@ -85,36 +71,6 @@ public class SecondaryController {
                 addData(repo);
             }
         }
-        killWindow(newRepoOpenFileButton);
-    }
-
-    /**
-     * 'Yes' button in clearing data window pressing handler.
-     */
-    @FXML
-    protected void clearProceed() {
-        try (Writer writer = new BufferedWriter(new FileWriter("data.dat"))) {
-            writer.write("");
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-        killWindow(clearProceedButton);
-    }
-
-    /**
-     * 'No' button in clearing data window pressing handler.
-     */
-    @FXML
-    protected void clearCancel() {
-        killWindow(clearCancelButton);
-    }
-
-    /**
-     * Kill window of control element.
-     * @param ctrl Control element.
-     */
-    private void killWindow(Control ctrl) {
-        Stage stage = (Stage) ctrl.getScene().getWindow();
-        stage.close();
+        Utils.killWindow(newRepoOpenFileButton);
     }
 }
