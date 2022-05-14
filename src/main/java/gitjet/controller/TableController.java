@@ -9,6 +9,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * Controller of 'View repositories' window, which appears after click on the eye button in start menu.
+ */
 public class TableController {
 
     /**

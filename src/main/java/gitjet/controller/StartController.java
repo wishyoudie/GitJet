@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Title screen controller class.
+ * Controller of start menu window.
  */
 public class StartController {
 

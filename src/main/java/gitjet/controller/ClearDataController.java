@@ -1,6 +1,6 @@
 package gitjet.controller;
 
-import gitjet.Utils;
+import static gitjet.Utils.killWindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+/**
+ * Controller of 'Clear data' window, which appears after click on the 'x' button in start menu.
+ */
 public class ClearDataController {
 
     /**
@@ -34,7 +37,7 @@ public class ClearDataController {
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-        Utils.killWindow(clearProceedButton);
+        killWindow(clearProceedButton);
     }
 
     /**
@@ -42,6 +45,6 @@ public class ClearDataController {
      */
     @FXML
     protected void clearCancel() {
-        Utils.killWindow(clearCancelButton);
+        killWindow(clearCancelButton);
     }
 }

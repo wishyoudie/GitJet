@@ -19,12 +19,13 @@ import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
 import static gitjet.model.collectinfo.AnalyzePom.isMavenRepository;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
+import static gitjet.model.Repo.getNameFromLink;
 
 public class ReposHandler {
 
     public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
 
-        String repoName = getRepoName(link);
+        String repoName = getNameFromLink(link);
 
         System.out.println("Starting cloning process");
         File clone = runCloning(link, repoName);
@@ -102,11 +103,6 @@ public class ReposHandler {
             }
             return repos;
         }
-    }
-
-    private static String getRepoName(String link) {
-        List<String> linkSplit = Arrays.asList(link.split("/"));
-        return linkSplit.get(linkSplit.size() - 1);
     }
 
     public List<Repo> readData(String fileName) {
