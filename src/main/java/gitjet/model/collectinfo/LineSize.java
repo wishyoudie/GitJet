@@ -36,9 +36,11 @@ public class LineSize {
     }
 
     private static Integer countStrings(File filesList) throws IOException {
-        int counter = 1;
+        int counter = 0;
         BufferedReader reader = new BufferedReader(new FileReader(filesList));
-        while (reader.readLine() != null) counter++;
+        while (reader.readLine() != null) {
+            counter++;
+        }
         reader.close();
         return counter;
     }

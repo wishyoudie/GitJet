@@ -17,7 +17,7 @@ public class Utils {
     }
 
     /**
-     * Returns an array of files in the received directory
+     * Returns an array of files of the received directory
      */
     public static File[] getFilesArray(File file) {
         if (!file.isDirectory()) {

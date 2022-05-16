@@ -1,5 +1,7 @@
 package gitjet.model.collectinfo;
 
+import org.eclipse.jgit.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -10,26 +12,28 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 
 public class CheckTests {
 
-    private File testsDirectory;
-
-    private void findTests(File file) {
+    @Nullable
+    private File findTests(File file) {
         File[] filesArray = getFilesArray(file);
+
+        File testDirectory = null;
 
         for (File currentFile : filesArray) {
             if (currentFile.isDirectory()) {
-                if (currentFile.getName().toLowerCase().contains("test")) {
-                    testsDirectory = currentFile;
+                if (currentFile.getName().toLowerCase().contains("test") || currentFile.getName().equals("test")) {
+                    testDirectory = currentFile;
+                    return testDirectory;
                 } else {
-                    findTests(currentFile);
+                   testDirectory = findTests(currentFile);
                 }
             }
         }
 
-        testsDirectory = null;
+        return testDirectory;
     }
 
     public int getNumberOfLinesInTests(File file) throws IOException {
-        findTests(file);
+        File testsDirectory = findTests(file);
 
         if (testsDirectory == null) {
             return 0;

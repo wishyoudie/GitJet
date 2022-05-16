@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class CommitsHistory {
 
-    int numberOfContributors = 0;
-    int numberOfCommits = 0;
+    private int numberOfContributors = 0;
+    private int numberOfCommits = 0;
 
     public void commitsStats(File file) {
 
