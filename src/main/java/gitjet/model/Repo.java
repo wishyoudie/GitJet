@@ -126,6 +126,11 @@ public class Repo {
         return "-";
     }
 
+    public static String getNameFromLink(String link) {
+        List<String> linkSplit = Arrays.asList(link.split("/"));
+        return linkSplit.get(linkSplit.size() - 1);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

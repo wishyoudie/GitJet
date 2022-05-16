@@ -3,7 +3,6 @@ package gitjet.controller;
 import gitjet.model.Repo;
 import gitjet.model.ReposHandler;
 import gitjet.model.clonerepo.GitCloningException;
-import gitjet.Utils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +13,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.*;
 import java.util.List;
 
+import static gitjet.Utils.killWindow;
+
+/**
+ * Controller of 'Add repository' window, which appears after click on the '+' button in start menu.
+ */
 public class AddRepoController {
 
     /**
@@ -23,7 +27,7 @@ public class AddRepoController {
     private TextField newRepoField;
 
     /**
-     * 'Submit' button in adding new repository window.
+     * 'Submit (link)' button in adding new repository window.
      */
     @FXML
     private Button newRepoOpenFileButton;
@@ -49,7 +53,7 @@ public class AddRepoController {
         String newRepoTextUrl = newRepoField.getText();
         Repo repo = new ReposHandler().handle(newRepoTextUrl);
         addData(repo);
-        Utils.killWindow(newRepoField);
+        killWindow(newRepoField);
     }
 
     /**
@@ -71,6 +75,6 @@ public class AddRepoController {
                 addData(repo);
             }
         }
-        Utils.killWindow(newRepoOpenFileButton);
+        killWindow(newRepoOpenFileButton);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Objects;
  * The main program entry class.
  */
 public class Application extends javafx.application.Application {
+
     /**
      * Start program handler.
      * @param stage Primary stage.
@@ -26,7 +27,6 @@ public class Application extends javafx.application.Application {
         stage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
         stage.setScene(scene);
         stage.show();
-
     }
 
     /**
