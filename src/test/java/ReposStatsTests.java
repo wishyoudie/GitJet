@@ -30,6 +30,7 @@ class ReposStatsTests {
     static void cleanUp() {
         deleteClone(repo1);
         deleteClone(repo2);
+        new File("clones").deleteOnExit();
     }
 
     @Test
