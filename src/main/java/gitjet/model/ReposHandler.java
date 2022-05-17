@@ -63,13 +63,16 @@ public class ReposHandler {
         int page = 1;
         List<Repo> results = new ArrayList<>();
 
-        while (results.size() < 100) {
+        while (results.size() < requiredNumber) {
             List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
 
             for (SearchRepository repo : repos) {
                 Repo result = handle("https://github.com/" + repo.toString());
-                if (!Objects.equals(result, new Repo(null, 0, 0, 0, false, 0, false, new HashSet<>()))) {
+                if (!Objects.equals(result.getName(), null)) {
                     results.add(result);
+                }
+                if (results.size() == requiredNumber) {
+                    return results;
                 }
             }
 
