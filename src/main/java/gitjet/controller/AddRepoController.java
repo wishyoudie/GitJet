@@ -23,7 +23,7 @@ public class AddRepoController {
     private TextField newRepoField;
 
     /**
-     * 'Submit (link)' button in adding new repository window.
+     * 'Submit' button in adding new repository window.
      */
     @FXML
     private Button newRepoOpenFileButton;
