@@ -13,4 +13,5 @@ module ru.spbstu.gitjet {
     exports gitjet.controller;
     opens gitjet.controller to javafx.fxml;
     opens gitjet.model to javafx.base, javafx.fxml;
+    exports gitjet.model.collectinfo;
 }
