@@ -105,13 +105,9 @@ public class ReposHandler {
     public List<Repo> handleLinksFile(File file) {
         List<Repo> repos = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            List<String> links = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                links.add(line);
-            }
-            for (String link : links) {
-                repos.add(handle(link));
+                repos.add(handle(line));
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
