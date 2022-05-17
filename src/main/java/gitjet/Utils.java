@@ -4,6 +4,8 @@ import javafx.scene.control.Control;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -30,5 +32,13 @@ public class Utils {
         }
 
         return filesList;
+    }
+
+    public static boolean isLink(String text) {
+        return Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)").matcher(text).find();
+    }
+
+    public static boolean isNumber(String text) {
+        return Pattern.compile("^[0-9]+$").matcher(text).find();
     }
 }

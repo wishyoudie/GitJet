@@ -11,8 +11,8 @@
    <children>
       <HBox alignment="CENTER" spacing="10">
          <children>
-            <TextField fx:id="newRepoField" layoutX="226.0" layoutY="194.0" promptText="Enter URL here" />
-            <Button fx:id="newRepoButton" mnemonicParsing="false" text="Submit" onAction="#newRepoSubmit"/>
+            <TextField fx:id="newRepoField" layoutX="226.0" layoutY="194.0" promptText="Number/URL" />
+            <Button fx:id="newRepoButton" mnemonicParsing="false" onAction="#newRepoSubmit" text="Submit" />
          </children>
          <padding>
             <Insets bottom="40.0" left="60.0" right="60.0" top="40.0" />
