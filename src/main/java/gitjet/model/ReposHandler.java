@@ -102,27 +102,21 @@ public class ReposHandler {
         return results;
     }
 
-    public List<Repo> handleTextFile(File file) {
+    public List<Repo> handleLinksFile(File file) {
         List<Repo> repos = new ArrayList<>();
-        List<String> links = setUpLinks(file);
-        System.out.println(links);
-        for (String link : links) {
-            repos.add(handle(link));
-        }
-        return repos;
-    }
-
-    private static List<String> setUpLinks(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            List<String> repos = new ArrayList<>();
+            List<String> links = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                repos.add(line);
+                links.add(line);
             }
-            return repos;
+            for (String link : links) {
+                repos.add(handle(link));
+            }
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
         }
+        return repos;
     }
 
     public List<Repo> readData(String fileName) {
@@ -151,6 +145,7 @@ public class ReposHandler {
         }
     }
 
+    // CHECK
     public void update(String link) {
         String name = getNameFromLink(link);
         if (alreadyHandled(name)) {
@@ -158,9 +153,7 @@ public class ReposHandler {
             List<String> after = new ArrayList<>();
             try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
                 String line;
-                int index = -1;
                 while ((line = br.readLine()) != null) {
-                    index++;
                     if (Objects.equals(Arrays.asList(line.split(" ")).get(0), name)) {
                         break;
                     }
@@ -179,9 +172,13 @@ public class ReposHandler {
                 for (String line : before) {
                     writer.append(line).append(System.lineSeparator());
                 }
+            } catch (IOException e) {
+                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            }
 
-                handle(link);
+            handle(link);
 
+            try (FileWriter writer = new FileWriter("data.dat", true)) {
                 for (String line : after) {
                     writer.append(line).append(System.lineSeparator());
                 }
