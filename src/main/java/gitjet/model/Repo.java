@@ -5,6 +5,7 @@ import java.util.*;
 public class Repo {
 
     private String name;
+    private String author;
     private int numberOfContributors;
     private int numberOfCommits;
     private int numberOfLinesInProject;
@@ -13,10 +14,11 @@ public class Repo {
     private String hasReadMe;
     private final Set<String> mavenDependencies = new HashSet<>();
 
-    public Repo(String name,
+    public Repo(String name, String author,
                 int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, boolean testInProject, int numberOfLinesInTests,
                 boolean readmeInProject, Set<String> mavenDependencies) {
         this.name = name;
+        this.author = author;
         this.numberOfContributors = numberOfContributors;
         this.numberOfCommits = numberOfCommits;
         this.numberOfLinesInProject = numberOfLinesInProject;
@@ -33,13 +35,14 @@ public class Repo {
         String[] rawParts = rawRepo.split(" ");
         List<String> parts = new ArrayList<>(Arrays.asList(rawParts));
         this.name = parts.get(0);
-        this.numberOfContributors = Integer.parseInt(parts.get(1));
-        this.numberOfCommits = Integer.parseInt(parts.get(2));
-        this.numberOfLinesInProject = Integer.parseInt(parts.get(3));
-        this.hasTests = parts.get(4);
-        this.numberOfLinesInTests = Integer.parseInt(parts.get(5));
-        this.hasReadMe = parts.get(6);
-        for (int i = 7; i < parts.size(); i++) {
+        this.author = parts.get(1);
+        this.numberOfContributors = Integer.parseInt(parts.get(2));
+        this.numberOfCommits = Integer.parseInt(parts.get(3));
+        this.numberOfLinesInProject = Integer.parseInt(parts.get(4));
+        this.hasTests = parts.get(5);
+        this.numberOfLinesInTests = Integer.parseInt(parts.get(6));
+        this.hasReadMe = parts.get(7);
+        for (int i = 8; i < parts.size(); i++) {
             this.mavenDependencies.add(parts.get(i));
         }
     }
@@ -50,6 +53,14 @@ public class Repo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public int getNumberOfContributors() {
@@ -131,10 +142,15 @@ public class Repo {
         return linkSplit.get(linkSplit.size() - 1);
     }
 
+    public static String getAuthorFromLink(String link) {
+        List<String> linkSplit = Arrays.asList(link.split("/"));
+        return linkSplit.get(linkSplit.size() - 2);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s %d %d %d %s %d %s", this.name, this.numberOfContributors, this.numberOfCommits, this.numberOfLinesInProject,
+        sb.append(String.format("%s %s %d %d %d %s %d %s", this.name, this.author, this.numberOfContributors, this.numberOfCommits, this.numberOfLinesInProject,
                 this.hasTests, this.numberOfLinesInTests, this.hasReadMe));
         for (String dep : mavenDependencies) {
             sb.append(" ");

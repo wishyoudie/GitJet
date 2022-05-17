@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
@@ -26,6 +27,7 @@ public class ReposHandler {
     public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
 
         String repoName = getNameFromLink(link);
+        String repoAuthor = getAuthorFromLink(link);
 
         System.out.println("Starting cloning process");
         File clone = runCloning(link, repoName);
@@ -33,7 +35,7 @@ public class ReposHandler {
         if (!isMavenRepository(clone)) {
             System.out.println("Not Maven project");
             deleteClone(clone);
-            return new Repo(null, 0, 0, 0, false, 0, false, new HashSet<>());
+            return new Repo(null, null, 0, 0, 0, false, 0, false, new HashSet<>());
         }
 
         CommitsHistory commitsHistory = new CommitsHistory();
@@ -55,7 +57,7 @@ public class ReposHandler {
         deleteClone(clone);
         System.out.println("Deleted");
 
-        return new Repo(repoName, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
+        return new Repo(repoName, repoAuthor, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
     }
 
     public List<Repo> handleSearchedRepos(int requiredNumber) throws IOException, GitAPIException, GitCloningException {

@@ -1,6 +1,9 @@
 package gitjet.controller;
 
 import gitjet.Application;
+import gitjet.model.Repo;
+import gitjet.model.ReposHandler;
+import gitjet.model.clonerepo.GitCloningException;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +14,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -122,10 +131,15 @@ public class StartController {
      * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
-    protected void refreshButtonClick() throws IOException {
-        System.out.println("TODO");
-        // generate text file from names in data and pass to another controller
-        // instead of creating new entry in data if repository doubles, refresh it
+    protected void refreshButtonClick() throws IOException, GitAPIException, GitCloningException {
+        try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
+            List<Repo> repos = new ArrayList<>();
+            ReposHandler reposHandler = new ReposHandler();
+            String line;
+            while ((line = br.readLine()) != null) {
+                repos.add(reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)));
+            }
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import gitjet.model.ReposHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,6 +32,11 @@ public class TableController {
     @FXML
     private TableColumn<Repo, String> nameColumn;
 
+    /**
+     * Repository author column in table.
+     */
+    @FXML
+    private TableColumn<Repo, String> authorColumn;
     /**
      * Total number of contributors into repository column.
      */
@@ -78,20 +84,18 @@ public class TableController {
      */
     @FXML
     protected void initialize() {
-        if (tableRepos != null) {
-            initData();
+        initData();
 
-            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-            contributorsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfContributors"));
-            commitsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfCommits"));
-            linesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInProject"));
-            hasTestsColumn.setCellValueFactory(new PropertyValueFactory<>("hasTests"));
-            testLinesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInTests"));
-            readMeColumn.setCellValueFactory(new PropertyValueFactory<>("hasReadMe"));
-            dependenciesColumn.setCellValueFactory(new PropertyValueFactory<>("mavenDependencies"));
-
-            tableRepos.setItems(reposData);
-        }
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        contributorsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfContributors"));
+        commitsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfCommits"));
+        linesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInProject"));
+        hasTestsColumn.setCellValueFactory(new PropertyValueFactory<>("hasTests"));
+        testLinesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfLinesInTests"));
+        readMeColumn.setCellValueFactory(new PropertyValueFactory<>("hasReadMe"));
+        dependenciesColumn.setCellValueFactory(new PropertyValueFactory<>("mavenDependencies"));
+        tableRepos.setItems(reposData);
     }
 
     /**
