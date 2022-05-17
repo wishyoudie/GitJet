@@ -1,5 +1,9 @@
 package gitjet.model;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class Repo {
@@ -145,6 +149,17 @@ public class Repo {
     public static String getAuthorFromLink(String link) {
         List<String> linkSplit = Arrays.asList(link.split("/"));
         return linkSplit.get(linkSplit.size() - 2);
+    }
+
+    /**
+     * Add repository to storage.
+     */
+    public void addToStorage() {
+        try (Writer writer = new BufferedWriter(new FileWriter("data.dat", true))) {
+            writer.append(this.toString()).append(System.lineSeparator());
+        } catch (IOException e) {
+            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+        }
     }
 
     @Override

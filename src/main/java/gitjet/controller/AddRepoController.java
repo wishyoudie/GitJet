@@ -1,5 +1,6 @@
 package gitjet.controller;
 
+import gitjet.model.Errors;
 import gitjet.model.Repo;
 import gitjet.model.ReposHandler;
 import gitjet.model.clonerepo.GitCloningException;
@@ -33,27 +34,15 @@ public class AddRepoController {
     private Button newRepoOpenFileButton;
 
     /**
-     * Add repository to storage.
-     * @param repo Repository to be added.
-     */
-    private void addData(Repo repo) {
-        try (Writer writer = new BufferedWriter(new FileWriter("data.dat", true))) {
-            writer.append(repo.toString()).append("\n"); // change to line end (different op systems)
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Couldn't open 'data.dat' file.");
-        }
-    }
-
-    /**
      * Add every repository from a list to storage.
      * @param repos List of repositories to be added.
      */
     private void addData(List<Repo> repos) {
         try (Writer writer = new BufferedWriter(new FileWriter("data.dat", true))) {
             for (Repo repo : repos)
-                writer.append(repo.toString()).append(System.lineSeparator()); // change to line end (different op systems)
+                writer.append(repo.toString()).append(System.lineSeparator());
         } catch (IOException e) {
-            throw new IllegalArgumentException("Couldn't open 'data.dat' file.");
+            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
         }
     }
 
@@ -64,13 +53,13 @@ public class AddRepoController {
     @FXML
     protected void newRepoSubmit() throws GitAPIException, GitCloningException, IOException {
         String textFieldValue = newRepoField.getText();
+        ReposHandler reposHandler = new ReposHandler();
         if (isLink(textFieldValue)) {
-            Repo repo = new ReposHandler().handle(textFieldValue);
-            addData(repo);
+            reposHandler.update(textFieldValue);
         } else if (isNumber(textFieldValue)) {
-            addData(new ReposHandler().handleSearchedRepos(Integer.parseInt(textFieldValue)));
+            addData(reposHandler.handleSearchedRepos(Integer.parseInt(textFieldValue)));
         } else {
-            // warning
+            System.out.println("Warning");
         }
         killWindow(newRepoField);
     }
@@ -89,10 +78,7 @@ public class AddRepoController {
         );
         File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
         if (file != null) {
-            List<Repo> repos = new ReposHandler().handleTextFile(file);
-            for (Repo repo : repos) {
-                addData(repo);
-            }
+            addData(new ReposHandler().handleTextFile(file));
         }
         killWindow(newRepoOpenFileButton);
     }

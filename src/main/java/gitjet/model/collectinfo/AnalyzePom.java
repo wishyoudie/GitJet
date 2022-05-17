@@ -1,10 +1,13 @@
 package gitjet.model.collectinfo;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 public class AnalyzePom {
 
@@ -38,4 +41,32 @@ public class AnalyzePom {
         return pom.exists();
     }
 
+    public static boolean isMavenRepository(String link) {
+        List<String> branches = new ArrayList<>();
+        try {
+            Collection<Ref> refs = Git.lsRemoteRepository().setHeads(true).setRemote(link).call();
+            for (Ref r : refs) {
+                List<String> branchFullName = Arrays.asList(r.getName().split("/"));
+                branches.add(branchFullName.get(branchFullName.size() - 1));
+            }
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+
+        for (String branch : branches) {
+            try {
+                URL u = new URL(link + "/blob/" + branch + "/pom.xml");
+                HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+                if (connection.getResponseCode() == 200) {
+                    return true;
+                }
+                connection.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }

@@ -1,6 +1,8 @@
 package gitjet.controller;
 
 import gitjet.Application;
+import gitjet.Utils;
+import gitjet.model.Errors;
 import gitjet.model.Repo;
 import gitjet.model.ReposHandler;
 import gitjet.model.clonerepo.GitCloningException;
@@ -126,30 +128,25 @@ public class StartController {
 
     /**
      * Act after user pressed 'Refresh' button on main screen.
-     * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
-    protected void refreshButtonClick() throws IOException, GitAPIException, GitCloningException {
-        List<Repo> repos = new ArrayList<>();
+    protected void refreshButtonClick() {
+        List<String> repos = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
-            ReposHandler reposHandler = new ReposHandler();
             String line;
             while ((line = br.readLine()) != null) {
-                repos.add(reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)));
+                repos.add(line);
             }
         } catch (IOException e) {
-            throw new IllegalArgumentException("No data");
+            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
         }
 
-        Writer cleaner = new BufferedWriter(new FileWriter("data.dat"));
-        cleaner.write("");
-        cleaner.close();
-        Writer writer = new BufferedWriter(new FileWriter("data.dat",true));
-        for (Repo repo : repos) {
-            writer.append(repo.toString()).append(System.lineSeparator());
+        Utils.cleanFile("data.dat");
+        ReposHandler reposHandler = new ReposHandler();
+        for (String line : repos) {
+            reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0));
         }
-        writer.close();
     }
 
     /**

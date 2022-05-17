@@ -1,5 +1,6 @@
 package gitjet.model;
 
+import gitjet.Utils;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
@@ -7,10 +8,7 @@ import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static gitjet.model.Repo.getAuthorFromLink;
@@ -24,19 +22,19 @@ import static gitjet.model.Repo.getNameFromLink;
 
 public class ReposHandler {
 
-    public Repo handle(String link) throws GitCloningException, GitAPIException, IOException {
+    public Repo handle(String link) {
 
         String repoName = getNameFromLink(link);
         String repoAuthor = getAuthorFromLink(link);
 
         System.out.println("Starting cloning process");
-        File clone = runCloning(link, repoName);
-
-        if (!isMavenRepository(clone)) {
-            System.out.println("Not Maven project");
-            deleteClone(clone);
-            return new Repo(null, null, 0, 0, 0, false, 0, false, new HashSet<>());
+        File clone = null;
+        try {
+            clone = runCloning(link, repoName);
+        } catch (GitCloningException | IOException e) {
+            e.printStackTrace();
         }
+
 
         CommitsHistory commitsHistory = new CommitsHistory();
         commitsHistory.commitsStats(clone);
@@ -45,22 +43,38 @@ public class ReposHandler {
         int numberOfCommits = commitsHistory.getNumberOfCommits();
         double commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
 
-        int numberOfLinesInProject = getAmountOfLines(clone);
+        int numberOfLinesInProject = 0;
+        try {
+            numberOfLinesInProject = getAmountOfLines(clone);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         CheckTests checkTests = new CheckTests();
-        int numberOfLinesInTests = checkTests.getNumberOfLinesInTests(clone);
+        int numberOfLinesInTests = 0;
+        try {
+            numberOfLinesInTests = checkTests.getNumberOfLinesInTests(clone);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         boolean readmeInProject = isReadmeInProject(clone);
 
-        Set<String> mavenDependencies = getDependencies(clone);
+        Set<String> mavenDependencies = null;
+        try {
+            mavenDependencies = getDependencies(clone);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         deleteClone(clone);
         System.out.println("Deleted");
-
-        return new Repo(repoName, repoAuthor, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
+        Repo result = new Repo(repoName, repoAuthor, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
+        result.addToStorage();
+        return result;
     }
 
-    public List<Repo> handleSearchedRepos(int requiredNumber) throws IOException, GitAPIException, GitCloningException {
+    public List<Repo> handleSearchedRepos(int requiredNumber) throws IOException {
         RepositoryService repositoryService = new RepositoryService();
         int page = 1;
         List<Repo> results = new ArrayList<>();
@@ -69,12 +83,16 @@ public class ReposHandler {
             List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
 
             for (SearchRepository repo : repos) {
-                Repo result = handle("https://github.com/" + repo.toString());
-                if (!Objects.equals(result.getName(), null)) {
-                    results.add(result);
-                }
-                if (results.size() == requiredNumber) {
-                    return results;
+                String link = "https://github.com/" + repo.toString();
+                System.out.println("Checking " + link);
+                if (isMavenRepository(link)) {
+                    Repo result = handle(link);
+                    if (!Objects.equals(result.getName(), null)) {
+                        results.add(result);
+                    }
+                    if (results.size() == requiredNumber) {
+                        return results;
+                    }
                 }
             }
 
@@ -85,21 +103,16 @@ public class ReposHandler {
     }
 
     public List<Repo> handleTextFile(File file) {
-        try {
-            List<Repo> repos = new ArrayList<>();
-            List<String> links = setUpLinks(file);
-            System.out.println(links);
-            for (String link : links) {
-                repos.add(handle(link));
-            }
-            return repos;
-        } catch (GitAPIException | GitCloningException | IOException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(e.getMessage());
+        List<Repo> repos = new ArrayList<>();
+        List<String> links = setUpLinks(file);
+        System.out.println(links);
+        for (String link : links) {
+            repos.add(handle(link));
         }
+        return repos;
     }
 
-    private static List<String> setUpLinks(File file) throws IOException {
+    private static List<String> setUpLinks(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             List<String> repos = new ArrayList<>();
             String line;
@@ -107,6 +120,8 @@ public class ReposHandler {
                 repos.add(line);
             }
             return repos;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Couldn't open file " + file);
         }
     }
 
@@ -119,7 +134,63 @@ public class ReposHandler {
             }
             return result;
         } catch (IOException e) {
-            throw new IllegalArgumentException("No data");
+            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+        }
+    }
+
+    public boolean alreadyHandled(String name) {
+        List<String> scannedNames = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                scannedNames.add(Arrays.asList(line.split(" ")).get(0));
+            }
+            return scannedNames.contains(name);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+        }
+    }
+
+    public void update(String link) {
+        String name = getNameFromLink(link);
+        if (alreadyHandled(name)) {
+            List<String> before = new ArrayList<>();
+            List<String> after = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
+                String line;
+                int index = -1;
+                while ((line = br.readLine()) != null) {
+                    index++;
+                    if (Objects.equals(Arrays.asList(line.split(" ")).get(0), name)) {
+                        break;
+                    }
+                    before.add(line);
+                }
+                while ((line = br.readLine()) != null) {
+                    after.add(line);
+                }
+            } catch (IOException e) {
+                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            }
+
+            Utils.cleanFile("data.dat");
+
+            try (FileWriter writer = new FileWriter("data.dat", true)) {
+                for (String line : before) {
+                    writer.append(line).append(System.lineSeparator());
+                }
+
+                handle(link);
+
+                for (String line : after) {
+                    writer.append(line).append(System.lineSeparator());
+                }
+            } catch (IOException e) {
+                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            }
+
+        } else {
+            handle(link);
         }
     }
 }

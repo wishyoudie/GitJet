@@ -9,14 +9,15 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-// package utils
 public class CloneProjects {
 
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
+
         Path path = Path.of("clones");
         if (!Files.exists(path)) {
-            Files.createDirectory(path); // otherwise, NoSuchFileException from next line
+            Files.createDirectory(path);
         }
+
         File localPath = Files.createTempDirectory(path, repoName).toFile();
 
         if (!localPath.delete()) {
@@ -39,7 +40,7 @@ public class CloneProjects {
         try {
             FileUtils.deleteDirectory(localPath);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Couldn't delete clone " + localPath);
         }
     }
 }

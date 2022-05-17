@@ -2,6 +2,8 @@ package gitjet.controller;
 
 import static gitjet.Utils.killWindow;
 
+import gitjet.Utils;
+import gitjet.model.Errors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -32,11 +34,7 @@ public class ClearDataController {
      */
     @FXML
     protected void clearProceed() {
-        try (Writer writer = new BufferedWriter(new FileWriter("data.dat"))) {
-            writer.write("");
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+        Utils.cleanFile("data.dat");
         killWindow(clearProceedButton);
     }
 
