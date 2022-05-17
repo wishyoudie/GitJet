@@ -25,7 +25,7 @@ public class CloneProjects {
 
         try (Git git = Git.cloneRepository()
                 .setURI(repo)
-                .setDirectory(localPath )
+                .setDirectory(localPath)
                 .call()) {
             System.out.println("Completed Cloning " + repoName);
         } catch (GitAPIException e) {

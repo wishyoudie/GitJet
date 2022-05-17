@@ -51,7 +51,7 @@ public class AddRepoController {
     private void addData(List<Repo> repos) {
         try (Writer writer = new BufferedWriter(new FileWriter("data.dat", true))) {
             for (Repo repo : repos)
-                writer.append(repo.toString()).append("\n"); // change to line end (different op systems)
+                writer.append(repo.toString()).append(System.lineSeparator()); // change to line end (different op systems)
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open 'data.dat' file.");
         }

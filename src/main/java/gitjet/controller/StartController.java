@@ -16,9 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,14 +130,26 @@ public class StartController {
      */
     @FXML
     protected void refreshButtonClick() throws IOException, GitAPIException, GitCloningException {
+        List<Repo> repos = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
-            List<Repo> repos = new ArrayList<>();
             ReposHandler reposHandler = new ReposHandler();
             String line;
             while ((line = br.readLine()) != null) {
                 repos.add(reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)));
             }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("No data");
         }
+
+        Writer cleaner = new BufferedWriter(new FileWriter("data.dat"));
+        cleaner.write("");
+        cleaner.close();
+        Writer writer = new BufferedWriter(new FileWriter("data.dat",true));
+        for (Repo repo : repos) {
+            writer.append(repo.toString()).append(System.lineSeparator());
+        }
+        writer.close();
     }
 
     /**
