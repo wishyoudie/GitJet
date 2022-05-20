@@ -8,38 +8,9 @@ import java.util.stream.Collectors;
 
 public class Mean {
 
-    private static List<Repo> readDat() {
-        List<Repo> results = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                List<String> splittedLine = List.of(line.split(" "));
-                String name = splittedLine.get(0);
-                String author = splittedLine.get(1);
-                int numberOfContributors = Integer.parseInt(splittedLine.get(2));
-                int numberOfCommits = Integer.parseInt(splittedLine.get(3));
-                int numberOfLinesInProject = Integer.parseInt(splittedLine.get(4));
-                boolean testsInProject = Objects.equals(splittedLine.get(5), "+");
-                int numberOfLinesInTests = Integer.parseInt(splittedLine.get(6));
-                boolean readmeInProject = Objects.equals(splittedLine.get(7), "+");
-
-                Set<String> dependencies = new HashSet<>();
-                for (int i = 8; i < splittedLine.size(); i++) {
-                    dependencies.add(splittedLine.get(i));
-                }
-                results.add(new Repo(name, author, numberOfContributors, numberOfCommits, numberOfLinesInProject, testsInProject, numberOfLinesInTests, readmeInProject, dependencies));
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
-        }
-
-        return results;
-    }
-
     public static Repo mean() {
 
-        List<Repo> repos = readDat();
+        List<Repo> repos = new ReposHandler().readData("data.dat");
 
         int numberOfRepos = repos.size();
 
