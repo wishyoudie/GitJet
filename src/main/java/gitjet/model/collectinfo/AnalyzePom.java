@@ -94,13 +94,14 @@ public class AnalyzePom {
                 StringBuilder buffer = new StringBuilder();
                 int read;
                 char[] chars = new char[1024];
+
                 while ((read = reader.read(chars)) != -1)
                     buffer.append(chars, 0, read);
 
                 return buffer.toString();
             } catch (IOException e) {
                 counter++;
-                System.err.println("Can't connect retrying: " + counter + "/5");
+                System.err.println("Can't connect, retrying: " + counter + "/5");
                 if (counter == 5) {
                     return null;
                 }

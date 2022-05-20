@@ -24,18 +24,25 @@ public class CloneProjects {
             throw new IOException("Could not delete temporary file " + localPath);
         }
 
-        try (Git git = Git.cloneRepository()
-                .setURI(repo)
-                .setDirectory(localPath)
-                .call()) {
-            System.out.println("Completed Cloning " + repoName);
-        } catch (GitAPIException e) {
-            System.err.println(Errors.CLONE_ERROR.getMessage());
-            System.err.println("Skipping " + repo);
-            return null;
-        }
+        int counter = 0;
 
-        return localPath;
+        while (true) {
+            try (Git git = Git.cloneRepository()
+                    .setURI(repo)
+                    .setDirectory(localPath)
+                    .call()) {
+                System.out.println("Completed Cloning " + repoName);
+                return localPath;
+            } catch (GitAPIException e) {
+                counter++;
+                System.err.println("Can't clone project, retrying: " + counter + "/5");
+                if (counter == 5) {
+                    System.err.println(Errors.CLONE_ERROR.getMessage());
+                    System.err.println("Skipping " + repo);
+                    return null;
+                }
+            }
+        }
     }
 
     public static void deleteClone(File localPath) {
