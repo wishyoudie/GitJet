@@ -76,7 +76,7 @@ public class ReposHandler {
         return result;
     }
 
-    public void handleSearchedRepos(int requiredNumber) throws IOException {
+    public void handleSearchedRepos(int requiredNumber) throws Exception {
         RepositoryService repositoryService = new RepositoryService();
         int page = 1;
         int counter = 0;
@@ -107,10 +107,14 @@ public class ReposHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                handle(line);
+                if (isMavenRepository(line)) {
+                    handle(line);
+                }
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -141,7 +145,7 @@ public class ReposHandler {
     }
 
     // CHECK
-    public void update(String link) {
+    public void update(String link) throws Exception {
         String name = getNameFromLink(link);
         if (alreadyHandled(name)) {
             List<String> before = new ArrayList<>();
@@ -171,7 +175,9 @@ public class ReposHandler {
                 throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
             }
 
-            handle(link);
+            if (isMavenRepository(link)) {
+                handle(link);
+            }
 
             try (FileWriter writer = new FileWriter("data.dat", true)) {
                 for (String line : after) {
@@ -182,7 +188,10 @@ public class ReposHandler {
             }
 
         } else {
-            handle(link);
+            if (isMavenRepository(link)) {
+                handle(link);
+            }
+
         }
     }
 }
