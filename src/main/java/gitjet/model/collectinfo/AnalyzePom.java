@@ -36,11 +36,6 @@ public class AnalyzePom {
         }
     }
 
-    public static boolean isMavenRepository(File file) {
-        File pom = new File(file + File.separator + "pom.xml");
-        return pom.exists();
-    }
-
     public static boolean isMavenRepository(String link) {
         List<String> branches = new ArrayList<>();
         try {

@@ -5,7 +5,6 @@ import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.*;
@@ -35,6 +34,9 @@ public class ReposHandler {
             e.printStackTrace();
         }
 
+        if (clone == null) {
+            return null;
+        }
 
         CommitsHistory commitsHistory = new CommitsHistory();
         commitsHistory.commitsStats(clone);
@@ -74,12 +76,12 @@ public class ReposHandler {
         return result;
     }
 
-    public List<Repo> handleSearchedRepos(int requiredNumber) throws IOException {
+    public void handleSearchedRepos(int requiredNumber) throws IOException {
         RepositoryService repositoryService = new RepositoryService();
         int page = 1;
-        List<Repo> results = new ArrayList<>();
+        int counter = 0;
 
-        while (results.size() < requiredNumber) {
+        while (counter < requiredNumber) {
             List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
 
             for (SearchRepository repo : repos) {
@@ -87,11 +89,11 @@ public class ReposHandler {
                 System.out.println("Checking " + link);
                 if (isMavenRepository(link)) {
                     Repo result = handle(link);
-                    if (!Objects.equals(result.getName(), null)) {
-                        results.add(result);
+                    if (!Objects.equals(result, null)) {
+                        counter++;
                     }
-                    if (results.size() == requiredNumber) {
-                        return results;
+                    if (counter == requiredNumber) {
+                        return;
                     }
                 }
             }
@@ -99,20 +101,17 @@ public class ReposHandler {
             page++;
         }
 
-        return results;
     }
 
-    public List<Repo> handleLinksFile(File file) {
-        List<Repo> repos = new ArrayList<>();
+    public void handleLinksFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                repos.add(handle(line));
+                handle(line);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
         }
-        return repos;
     }
 
     public List<Repo> readData(String fileName) {

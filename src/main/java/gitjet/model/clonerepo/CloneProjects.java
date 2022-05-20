@@ -30,7 +30,9 @@ public class CloneProjects {
                 .call()) {
             System.out.println("Completed Cloning " + repoName);
         } catch (GitAPIException e) {
-            throw new GitCloningException(Errors.CLONE_ERROR.getMessage());
+            System.err.println(Errors.CLONE_ERROR.getMessage());
+            System.err.println("Skipping " + repo);
+            return null;
         }
 
         return localPath;
