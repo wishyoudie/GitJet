@@ -41,19 +41,12 @@ public class AnalyzePom {
     }
 
     public static boolean isMavenRepository(String link) throws Exception {
-//        List<String> branches = new ArrayList<>();
-//        try {
-//            Collection<Ref> refs = Git.lsRemoteRepository().setHeads(true).setRemote(link).call();
-//            for (Ref r : refs) {
-//                List<String> branchFullName = Arrays.asList(r.getName().split("/"));
-//                branches.add(branchFullName.get(branchFullName.size() - 1));
-//            }
-//        } catch (GitAPIException e) {
-//            e.printStackTrace();
-//        }
 
         String branch = getDefaultBranch(link);
-        System.out.println();
+
+        if (branch == null) {
+            return false;
+        }
 
 
         try {
@@ -74,6 +67,11 @@ public class AnalyzePom {
     public static String getDefaultBranch(String link) throws Exception {
         String url = "https://api.github.com/repos/" + getAuthorFromLink(link) + "/" + getNameFromLink(link);
         String data = readUrl(url);
+
+        if (data == null) {
+            return null;
+        }
+
         JSONArray jsonArr = new JSONArray("[" + data + "]");
         String branch = null;
 
@@ -88,19 +86,28 @@ public class AnalyzePom {
 
     private static String readUrl(String urlString) throws Exception {
         BufferedReader reader = null;
-        try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder buffer = new StringBuilder();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
+        int counter = 0;
+        while (true) {
+            try {
+                URL url = new URL(urlString);
+                reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder buffer = new StringBuilder();
+                int read;
+                char[] chars = new char[1024];
+                while ((read = reader.read(chars)) != -1)
+                    buffer.append(chars, 0, read);
 
-            return buffer.toString();
-        } finally {
-            if (reader != null)
-                reader.close();
+                return buffer.toString();
+            } catch (IOException e) {
+                counter++;
+                System.err.println("Can't connect retrying: " + counter + "/5");
+                if (counter == 5) {
+                    return null;
+                }
+            } finally {
+                if (reader != null)
+                    reader.close();
+            }
         }
     }
 }
