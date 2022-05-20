@@ -30,8 +30,9 @@ public class AnalyzePom {
                     dependenciesOpened = true;
                 }
 
-                if (dependenciesOpened && line.contains("<groupId>")) {
-                    dependencies.add(line.replace("<groupId>", "").replace("</groupId>", "").trim());
+                if (dependenciesOpened && line.contains("<groupId>") && !line.contains("<!--") && !line.contains("-->")) {
+                    dependencies.add(line.replace("<groupId>", "").replace("</groupId>", "")
+                            .replace("<dependency>", "").trim());
                 }
             }
 
