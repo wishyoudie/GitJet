@@ -119,7 +119,7 @@ public class StartController {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("table-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
         Stage getRepoStage = new Stage();
-        getRepoStage.setTitle("Table of repositories");
+        getRepoStage.setTitle("Gathered information");
         getRepoStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
         getRepoStage.setScene(scene);
         getRepoStage.initModality(Modality.APPLICATION_MODAL);

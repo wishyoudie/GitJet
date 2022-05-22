@@ -145,7 +145,7 @@ public class ReposHandler {
     }
 
     // CHECK
-    public void update(String link) throws Exception {
+    public void update(String link) {
         String name = getNameFromLink(link);
         if (alreadyHandled(name)) {
             List<String> before = new ArrayList<>();
@@ -175,9 +175,7 @@ public class ReposHandler {
                 throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
             }
 
-            if (isMavenRepository(link)) {
-                handle(link);
-            }
+            handle(link);
 
             try (FileWriter writer = new FileWriter("data.dat", true)) {
                 for (String line : after) {
@@ -188,10 +186,24 @@ public class ReposHandler {
             }
 
         } else {
-            if (isMavenRepository(link)) {
-                handle(link);
-            }
-
+            handle(link);
         }
+    }
+
+    public List<Map.Entry<String, Integer>> catalogDependencies() {
+        List<Map.Entry<String, Integer>> result = new ArrayList<>();
+        List<Repo> repos = readData("data.dat");
+        List<String> dependenciesList = new ArrayList<>();
+        Set<String> dependenciesSet = new HashSet<>();
+        for (Repo repo : repos) {
+            Set<String> dependencies = repo.getMavenDependencies();
+            dependenciesSet.addAll(dependencies);
+            dependenciesList.addAll(dependencies);
+        }
+        for (String dependency : dependenciesSet) {
+            result.add(Map.entry(dependency, Collections.frequency(dependenciesList, dependency)));
+        }
+        result.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        return result;
     }
 }

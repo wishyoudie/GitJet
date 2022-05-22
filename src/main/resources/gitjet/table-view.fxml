@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:controller="gitjet.controller.TableController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-    <top>
+
+<TabPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.TableController">
+   <tabs>
+      <Tab text="Repositories">
+         <content>
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0">
+                <top>
     </top>
-   <center>
-      <TableView fx:id="tableRepos" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <columns>
-            <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
-            <TableColumn fx:id="authorColumn" prefWidth="125" text="Author" />
-            <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
-            <TableColumn fx:id="commitsColumn" prefWidth="75.0" text="Commits" />
-            <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
-            <TableColumn fx:id="hasTestsColumn" prefWidth="75.0" text="Has tests" />
-            <TableColumn fx:id="testLinesColumn" prefWidth="100.0" text="Lines in tests" />
-            <TableColumn fx:id="readMeColumn" prefWidth="100.0" text="Has README file" />
-            <TableColumn fx:id="dependenciesColumn" prefWidth="300.0" text="Dependencies" />
-        </columns>
-      </TableView>
-   </center>
-</BorderPane>
+               <center>
+                  <TableView fx:id="tableRepos" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
+                        <TableColumn fx:id="authorColumn" prefWidth="125" text="Author" />
+                        <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
+                        <TableColumn fx:id="commitsColumn" prefWidth="75.0" text="Commits" />
+                        <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
+                        <TableColumn fx:id="hasTestsColumn" prefWidth="75.0" text="Has tests" />
+                        <TableColumn fx:id="testLinesColumn" prefWidth="100.0" text="Lines in tests" />
+                        <TableColumn fx:id="readMeColumn" prefWidth="80.0" text="README" />
+                        <TableColumn fx:id="dependenciesColumn" prefWidth="300.0" text="Dependencies" />
+                    </columns>
+                  </TableView>
+               </center>
+            </BorderPane>
+         </content>
+      </Tab>
+      <Tab text="Dependencies">
+         <content>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <TableView fx:id="tableDependencies" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <columns>
+                      <TableColumn fx:id="dependencyNameColumn" prefWidth="100.0" text="Name" />
+                      <TableColumn fx:id="dependencyUsagesColumn" prefWidth="75.0" text="Usages" />
+                    </columns>
+                  </TableView>
+               </center>
+            </BorderPane>
+         </content>
+      </Tab>
+   </tabs>
+</TabPane>

@@ -39,7 +39,7 @@ public class Mean {
 
             Set<String> dependencies = repo.getMavenDependencies();
 
-            for(String dependency : dependencies) {
+            for (String dependency : dependencies) {
                 if (!dependenciesUsage.containsKey(dependency)) {
                     dependenciesUsage.put(dependency, 1);
                 } else {
