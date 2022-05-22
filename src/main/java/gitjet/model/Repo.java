@@ -18,6 +18,9 @@ public class Repo {
     private String hasReadMe;
     private final Set<String> mavenDependencies = new HashSet<>();
 
+    public Repo() {
+    }
+
     public Repo(String name, String author,
                 int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, boolean testInProject, int numberOfLinesInTests,
                 boolean readmeInProject, Set<String> mavenDependencies) {
@@ -32,7 +35,18 @@ public class Repo {
         this.mavenDependencies.addAll(mavenDependencies);
     }
 
-    public Repo() {
+    public Repo(String name, String author,
+                int numberOfContributors, int numberOfCommits, int numberOfLinesInProject, String testInProject, int numberOfLinesInTests,
+                String readmeInProject, Set<String> mavenDependencies) {
+        this.name = name;
+        this.author = author;
+        this.numberOfContributors = numberOfContributors;
+        this.numberOfCommits = numberOfCommits;
+        this.numberOfLinesInProject = numberOfLinesInProject;
+        this.numberOfLinesInTests = numberOfLinesInTests;
+        this.hasTests = testInProject;
+        this.hasReadMe = readmeInProject;
+        this.mavenDependencies.addAll(mavenDependencies);
     }
 
     public Repo(String rawRepo) {

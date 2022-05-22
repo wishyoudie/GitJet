@@ -6,7 +6,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-
 <TabPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.TableController">
    <tabs>
       <Tab text="Repositories">
@@ -15,13 +14,13 @@
                 <top>
     </top>
                <center>
-                  <TableView fx:id="tableRepos" BorderPane.alignment="CENTER">
+                  <TableView fx:id="mainTable" BorderPane.alignment="CENTER">
                     <columns>
                         <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Name" />
                         <TableColumn fx:id="authorColumn" prefWidth="125" text="Author" />
                         <TableColumn fx:id="contributorsColumn" prefWidth="100.0" text="Contributors" />
                         <TableColumn fx:id="commitsColumn" prefWidth="75.0" text="Commits" />
-                        <TableColumn fx:id="linesColumn" prefWidth="50.0" text="Lines" />
+                        <TableColumn fx:id="linesColumn" prefWidth="75.0" text="Lines" />
                         <TableColumn fx:id="hasTestsColumn" prefWidth="75.0" text="Has tests" />
                         <TableColumn fx:id="testLinesColumn" prefWidth="100.0" text="Lines in tests" />
                         <TableColumn fx:id="readMeColumn" prefWidth="80.0" text="README" />
@@ -29,6 +28,21 @@
                     </columns>
                   </TableView>
                </center>
+               <bottom>
+                  <TableView fx:id="summaryTable" prefHeight="50.0" style="-fx-font-weight: bold;" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="summaryNameColumn" prefWidth="125.0" text="Name" />
+                        <TableColumn fx:id="summaryAuthorColumn" prefWidth="125" text="Author" />
+                        <TableColumn fx:id="summaryContributorsColumn" prefWidth="100.0" text="Contributors" />
+                        <TableColumn fx:id="summaryCommitsColumn" prefWidth="75.0" text="Commits" />
+                        <TableColumn fx:id="summaryLinesColumn" prefWidth="75.0" text="Lines" />
+                        <TableColumn fx:id="summaryHasTestsColumn" prefWidth="75.0" text="Has tests" />
+                        <TableColumn fx:id="summaryTestLinesColumn" prefWidth="100.0" text="Lines in tests" />
+                        <TableColumn fx:id="summaryReadMeColumn" prefWidth="80.0" text="README" />
+                        <TableColumn fx:id="summaryDependenciesColumn" prefWidth="300.0" text="Dependencies" />
+                    </columns>
+                  </TableView>
+               </bottom>
             </BorderPane>
          </content>
       </Tab>
@@ -36,9 +50,9 @@
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <TableView fx:id="tableDependencies" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="dependenciesTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <columns>
-                      <TableColumn fx:id="dependencyNameColumn" prefWidth="100.0" text="Name" />
+                      <TableColumn fx:id="dependencyNameColumn" prefWidth="400.0" text="Name" />
                       <TableColumn fx:id="dependencyUsagesColumn" prefWidth="75.0" text="Usages" />
                     </columns>
                   </TableView>

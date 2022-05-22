@@ -117,7 +117,7 @@ public class StartController {
     @FXML
     protected void lookButtonClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("table-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 650);
         Stage getRepoStage = new Stage();
         getRepoStage.setTitle("Gathered information");
         getRepoStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));

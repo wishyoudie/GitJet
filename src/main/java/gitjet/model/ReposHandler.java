@@ -9,6 +9,7 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
@@ -190,9 +191,8 @@ public class ReposHandler {
         }
     }
 
-    public List<Map.Entry<String, Integer>> catalogDependencies() {
+    public List<Map.Entry<String, Integer>> catalogDependencies(List<Repo> repos) {
         List<Map.Entry<String, Integer>> result = new ArrayList<>();
-        List<Repo> repos = readData("data.dat");
         List<String> dependenciesList = new ArrayList<>();
         Set<String> dependenciesSet = new HashSet<>();
         for (Repo repo : repos) {
@@ -205,5 +205,93 @@ public class ReposHandler {
         }
         result.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
         return result;
+    }
+
+    public List<Repo> calculateSummary(List<Repo> repos) {
+        List<Repo> result = new ArrayList<>();
+        result.add(evaluateMean(repos));
+        result.add(evaluateTotal(repos));
+        return result;
+    }
+
+    public Repo evaluateTotal(List<Repo> repos) {
+        int numberOfRepos = repos.size();
+
+        int numberOfContributors = 0,
+                numberOfCommits = 0,
+                numberOfLinesInProject = 0,
+                numberOfLinesInTests = 0,
+                numberOfReadmes = 0,
+                numberOfTests = 0;
+        Set<String> dependencies = new HashSet<>();
+
+        for (Repo repo : repos) {
+
+            numberOfContributors += repo.getNumberOfContributors();
+            numberOfCommits += repo.getNumberOfCommits();
+            numberOfLinesInProject += repo.getNumberOfLinesInProject();
+            numberOfLinesInTests += repo.getNumberOfLinesInTests();
+
+            if (repo.hasReadMe()) {
+                numberOfReadmes += 1;
+            }
+
+            if (repo.getNumberOfLinesInTests() > 0) {
+                numberOfTests += 1;
+            }
+
+            dependencies.addAll(repo.getMavenDependencies());
+        }
+
+        String readmesInProject = numberOfReadmes + "/" + numberOfRepos;
+        String testsInProject = numberOfTests + "/" + numberOfRepos;
+        Set<String> totalNumberOfDependenciesAsSet = new HashSet<>();
+        String totalNumberOfDependencies = String.valueOf(dependencies.size());
+        totalNumberOfDependenciesAsSet.add(totalNumberOfDependencies);
+
+        return new Repo("Total",
+                null,
+                numberOfContributors,
+                numberOfCommits,
+                numberOfLinesInProject,
+                testsInProject,
+                numberOfLinesInTests,
+                readmesInProject,
+                totalNumberOfDependenciesAsSet);
+    }
+
+    public Repo evaluateMean(List<Repo> repos) {
+        int numberOfRepos = repos.size();
+
+        int numberOfContributors = 0,
+                numberOfCommits = 0,
+                numberOfLinesInProject = 0,
+                numberOfLinesInTests = 0;
+        List<Integer> dependenciesUsage = new ArrayList<>();
+
+        for (Repo repo : repos) {
+
+            numberOfContributors += repo.getNumberOfContributors();
+            numberOfCommits += repo.getNumberOfCommits();
+            numberOfLinesInProject += repo.getNumberOfLinesInProject();
+            numberOfLinesInTests += repo.getNumberOfLinesInTests();
+
+            dependenciesUsage.add(repo.getMavenDependencies().size());
+
+        }
+
+        Set<String> meanNumberOfDependenciesAsSet = new HashSet<>();
+        String meanNumberOfDependencies = String.valueOf(dependenciesUsage.stream().mapToInt(Integer::intValue).sum() / numberOfRepos);
+        meanNumberOfDependenciesAsSet.add(meanNumberOfDependencies);
+
+        return new Repo("Mean",
+                "",
+                numberOfContributors / numberOfRepos,
+                numberOfCommits / numberOfRepos,
+                numberOfLinesInProject / numberOfRepos,
+                null,
+                numberOfLinesInTests / numberOfRepos,
+                null,
+                meanNumberOfDependenciesAsSet);
     }
 }
