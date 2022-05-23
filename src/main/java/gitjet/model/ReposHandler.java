@@ -176,8 +176,6 @@ public class ReposHandler {
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
