@@ -69,57 +69,36 @@ public class ReposHandler {
      * @param link URL to repository on GitHub.
      */
     public void update(String link) {
-        String name = getNameFromLink(link);
-        if (alreadyHandled(name)) {
-            List<String> before = new ArrayList<>();
-            List<String> after = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (Objects.equals(Arrays.asList(line.split(" ")).get(0), name)) {
-                        break;
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        executor.submit(() -> {
+            String name = getNameFromLink(link);
+            if (alreadyHandled(name)) {
+                List<Repo> data = readData("data.dat");
+                Utils.cleanFile("data.dat");
+                try (FileWriter writer = new FileWriter("data.dat", true)) {
+                    for (Repo repo : data) {
+                        if (Objects.equals(repo.getName(), name)) {
+                            writer.append(handle(link).toString()).append(System.lineSeparator());
+                        } else {
+                            writer.append(repo.toString()).append(System.lineSeparator());
+                        }
                     }
-                    before.add(line);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
                 }
-                while ((line = br.readLine()) != null) {
-                    after.add(line);
-                }
-            } catch (IOException e) {
-                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            } else {
+                handle(link);
             }
-
-            Utils.cleanFile("data.dat");
-
-            try (FileWriter writer = new FileWriter("data.dat", true)) {
-                for (String line : before) {
-                    writer.append(line).append(System.lineSeparator());
-                }
-            } catch (IOException e) {
-                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
-            }
-
-            handle(link);
-
-            try (FileWriter writer = new FileWriter("data.dat", true)) {
-                for (String line : after) {
-                    writer.append(line).append(System.lineSeparator());
-                }
-            } catch (IOException e) {
-                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
-            }
-
-        } else {
-            handle(link);
-        }
+        });
+        executor.shutdown();
     }
 
     /**
-     * Handle link to repository. Turns data into Repo and writes it into storage.
+     * Handle link to repository. Turns data into Repo.
      * @param link URL to repository on GitHub.
      * @return Repo instance of provided repository.
      */
     public Repo handle(String link) {
-
         File clone = null;
 
         try {
@@ -128,7 +107,7 @@ public class ReposHandler {
             int numberOfLinesInTests = new CheckTests().getNumberOfLinesInTests(clone);
             CommitsHistory commitsHistory = new CommitsHistory(clone);
 
-            Repo result = new Repo(repoName,
+            return new Repo(repoName,
                     getAuthorFromLink(link),
                     commitsHistory.getNumberOfContributors(),
                     commitsHistory.getNumberOfCommits(),
@@ -137,9 +116,6 @@ public class ReposHandler {
                     numberOfLinesInTests,
                     isReadmeInProject(clone),
                     getDependencies(clone));
-
-            result.addToStorage();
-            return result;
         } catch (GitCloningException | IOException e) {
             e.printStackTrace();
             return null;
@@ -170,6 +146,7 @@ public class ReposHandler {
                             if (!Objects.equals(result, null)) {
                                 counter++;
                             }
+                            result.addToStorage();
                             if (counter == requiredNumber) {
                                 return;
                             }
