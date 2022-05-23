@@ -32,7 +32,7 @@ public class AddRepoController {
      * 'Submit' button in adding new repository window pressing handler.
      */
     @FXML
-    protected void newRepoSubmit() throws Exception {
+    protected void newRepoSubmit() {
         String textFieldValue = newRepoField.getText();
         ReposHandler reposHandler = new ReposHandler();
         if (isLink(textFieldValue)) {

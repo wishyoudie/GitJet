@@ -3,14 +3,8 @@ package gitjet.controller;
 import static gitjet.Utils.killWindow;
 
 import gitjet.Utils;
-import gitjet.model.Errors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Controller of 'Clear data' window, which appears after click on the 'x' button in start menu.

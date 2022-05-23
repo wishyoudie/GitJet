@@ -3,9 +3,7 @@ package gitjet.controller;
 import gitjet.Application;
 import gitjet.Utils;
 import gitjet.model.Errors;
-import gitjet.model.Repo;
 import gitjet.model.ReposHandler;
-import gitjet.model.clonerepo.GitCloningException;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
 import java.util.ArrayList;
