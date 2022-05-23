@@ -271,35 +271,48 @@ public class ReposHandler {
     public Repo evaluateMean(List<Repo> repos) {
         int numberOfRepos = repos.size();
 
-        int numberOfContributors = 0,
-                numberOfCommits = 0,
-                numberOfLinesInProject = 0,
-                numberOfLinesInTests = 0;
-        List<Integer> dependenciesUsage = new ArrayList<>();
+        if (numberOfRepos == 0) {
+            return new Repo(
+                    "Mean",
+                    "",
+                    0,
+                    0,
+                    0,
+                    null,
+                    0,
+                    null,
+                    new HashSet<>());
+        } else {
+            int numberOfContributors = 0,
+                    numberOfCommits = 0,
+                    numberOfLinesInProject = 0,
+                    numberOfLinesInTests = 0;
+            List<Integer> dependenciesUsage = new ArrayList<>();
 
-        for (Repo repo : repos) {
+            for (Repo repo : repos) {
 
-            numberOfContributors += repo.getNumberOfContributors();
-            numberOfCommits += repo.getNumberOfCommits();
-            numberOfLinesInProject += repo.getNumberOfLinesInProject();
-            numberOfLinesInTests += repo.getNumberOfLinesInTests();
+                numberOfContributors += repo.getNumberOfContributors();
+                numberOfCommits += repo.getNumberOfCommits();
+                numberOfLinesInProject += repo.getNumberOfLinesInProject();
+                numberOfLinesInTests += repo.getNumberOfLinesInTests();
 
-            dependenciesUsage.add(repo.getMavenDependencies().size());
+                dependenciesUsage.add(repo.getMavenDependencies().size());
 
+            }
+
+            Set<String> meanNumberOfDependenciesAsSet = new HashSet<>();
+            String meanNumberOfDependencies = String.valueOf(dependenciesUsage.stream().mapToInt(Integer::intValue).sum() / numberOfRepos);
+            meanNumberOfDependenciesAsSet.add(meanNumberOfDependencies);
+
+            return new Repo("Mean",
+                    "",
+                    numberOfContributors / numberOfRepos,
+                    numberOfCommits / numberOfRepos,
+                    numberOfLinesInProject / numberOfRepos,
+                    null,
+                    numberOfLinesInTests / numberOfRepos,
+                    null,
+                    meanNumberOfDependenciesAsSet);
         }
-
-        Set<String> meanNumberOfDependenciesAsSet = new HashSet<>();
-        String meanNumberOfDependencies = String.valueOf(dependenciesUsage.stream().mapToInt(Integer::intValue).sum() / numberOfRepos);
-        meanNumberOfDependenciesAsSet.add(meanNumberOfDependencies);
-
-        return new Repo("Mean",
-                "",
-                numberOfContributors / numberOfRepos,
-                numberOfCommits / numberOfRepos,
-                numberOfLinesInProject / numberOfRepos,
-                null,
-                numberOfLinesInTests / numberOfRepos,
-                null,
-                meanNumberOfDependenciesAsSet);
     }
 }
