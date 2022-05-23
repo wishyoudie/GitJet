@@ -36,13 +36,11 @@ class ReposStatsTests {
     @Test
     void commitsHistoryTest() {
 
-        CommitsHistory commitsHistory1 = new CommitsHistory();
-        commitsHistory1.commitsStats(repo1);
+        CommitsHistory commitsHistory1 = new CommitsHistory(repo1);
         assertEquals(23, commitsHistory1.getNumberOfCommits());
         assertEquals(1, commitsHistory1.getNumberOfContributors());
 
-        CommitsHistory commitsHistory2 = new CommitsHistory();
-        commitsHistory2.commitsStats(repo2);
+        CommitsHistory commitsHistory2 = new CommitsHistory(repo2);
         assertEquals(13, commitsHistory2.getNumberOfCommits());
         assertEquals(2, commitsHistory2.getNumberOfContributors());
     }

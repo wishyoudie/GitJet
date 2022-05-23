@@ -38,7 +38,7 @@ public class AddRepoController {
         if (isLink(textFieldValue)) {
             reposHandler.update(textFieldValue);
         } else if (isNumber(textFieldValue)) {
-            reposHandler.handleSearchedRepos(Integer.parseInt(textFieldValue));
+            reposHandler.searchRepos(Integer.parseInt(textFieldValue));
         } else {
             System.out.println("Warning");
         }

@@ -15,13 +15,11 @@ public class CommitsHistory {
     private int numberOfContributors = 0;
     private int numberOfCommits = 0;
 
-    public void commitsStats(File file) {
+    public CommitsHistory(File file) {
 
         try (Git git = Git.open(file)) {
             Iterable<RevCommit> commits = git.log().all().call();
             Map<String, Integer> commitsPerContributors = new HashMap<>();
-
-            // System.out.println("Checking " + file.getName() + " project");
 
             for (RevCommit commit : commits) {
                 String contributorName = commit.getAuthorIdent().getName();
@@ -42,7 +40,6 @@ public class CommitsHistory {
             for (Map.Entry<String, Integer> entry : commitsPerContributors.entrySet()) {
                 System.out.println(entry.getKey() + " = " + entry.getValue());
             }
-            // System.out.println(file.getName() + " project checked\n");
         } catch (IOException | GitAPIException e) { // maybe handle gitapiex
             e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());

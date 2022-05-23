@@ -9,7 +9,8 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
@@ -20,105 +21,16 @@ import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 import static gitjet.model.Repo.getNameFromLink;
 
+/**
+ * Retrieve data from GitHub and turn it into Repo instances class.
+ */
 public class ReposHandler {
 
-    public Repo handle(String link) {
-
-        String repoName = getNameFromLink(link);
-        String repoAuthor = getAuthorFromLink(link);
-
-        System.out.println("Starting cloning process");
-        File clone = null;
-        try {
-            clone = runCloning(link, repoName);
-        } catch (GitCloningException | IOException e) {
-            e.printStackTrace();
-        }
-
-        if (clone == null) {
-            return null;
-        }
-
-        CommitsHistory commitsHistory = new CommitsHistory();
-        commitsHistory.commitsStats(clone);
-
-        int numberOfContributors = commitsHistory.getNumberOfContributors();
-        int numberOfCommits = commitsHistory.getNumberOfCommits();
-        double commitsPerContributor = (numberOfCommits * 1.0) / numberOfContributors;
-
-        int numberOfLinesInProject = 0;
-        try {
-            numberOfLinesInProject = getAmountOfLines(clone);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        CheckTests checkTests = new CheckTests();
-        int numberOfLinesInTests = 0;
-        try {
-            numberOfLinesInTests = checkTests.getNumberOfLinesInTests(clone);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        boolean readmeInProject = isReadmeInProject(clone);
-
-        Set<String> mavenDependencies = null;
-        try {
-            mavenDependencies = getDependencies(clone);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        deleteClone(clone);
-        System.out.println("Deleted");
-        Repo result = new Repo(repoName, repoAuthor, numberOfContributors, numberOfCommits, numberOfLinesInProject, (numberOfLinesInTests != 0), numberOfLinesInTests, readmeInProject, mavenDependencies);
-        result.addToStorage();
-        return result;
-    }
-
-    public void handleSearchedRepos(int requiredNumber) throws Exception {
-        RepositoryService repositoryService = new RepositoryService();
-        int page = 1;
-        int counter = 0;
-
-        while (counter < requiredNumber) {
-            List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
-
-            for (SearchRepository repo : repos) {
-                String link = "https://github.com/" + repo.toString();
-                System.out.println("Checking " + link);
-                if (isMavenRepository(link)) {
-                    Repo result = handle(link);
-                    if (!Objects.equals(result, null)) {
-                        counter++;
-                    }
-                    if (counter == requiredNumber) {
-                        return;
-                    }
-                }
-            }
-
-            page++;
-        }
-
-    }
-
-    public void handleLinksFile(File file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (isMavenRepository(line)) {
-                    handle(line);
-                }
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Couldn't open file " + file);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    /**
+     * Initialize already collected data from storage.
+     * @param fileName A file which contains result of handling.
+     * @return List of data translated into Repo instances.
+     */
     public List<Repo> readData(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             List<Repo> result = new ArrayList<>();
@@ -132,6 +44,12 @@ public class ReposHandler {
         }
     }
 
+    /**
+     * Check if repository with given name has already been handled. A repository has already been handled
+     * if the main database file contains its data.
+     * @param name A name of repository.
+     * @return True if this repository has already been handled.
+     */
     public boolean alreadyHandled(String name) {
         List<String> scannedNames = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
@@ -145,7 +63,11 @@ public class ReposHandler {
         }
     }
 
-    // CHECK
+    /**
+     * Update repository by its URL. Updates information on repository without changing its position if it has
+     * already been handled, handles it otherwise.
+     * @param link URL to repository on GitHub.
+     */
     public void update(String link) {
         String name = getNameFromLink(link);
         if (alreadyHandled(name)) {
@@ -191,6 +113,102 @@ public class ReposHandler {
         }
     }
 
+    /**
+     * Handle link to repository. Turns data into Repo and writes it into storage.
+     * @param link URL to repository on GitHub.
+     * @return Repo instance of provided repository.
+     */
+    public Repo handle(String link) {
+
+        File clone = null;
+
+        try {
+            String repoName = getNameFromLink(link);
+            clone = runCloning(link, repoName);
+            int numberOfLinesInTests = new CheckTests().getNumberOfLinesInTests(clone);
+            CommitsHistory commitsHistory = new CommitsHistory(clone);
+
+            Repo result = new Repo(repoName,
+                    getAuthorFromLink(link),
+                    commitsHistory.getNumberOfContributors(),
+                    commitsHistory.getNumberOfCommits(),
+                    getAmountOfLines(clone),
+                    (numberOfLinesInTests != 0),
+                    numberOfLinesInTests,
+                    isReadmeInProject(clone),
+                    getDependencies(clone));
+
+            result.addToStorage();
+            return result;
+        } catch (GitCloningException | IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            deleteClone(clone);
+        }
+    }
+
+    /**
+     * Search Maven repositories on GitHub and handle them.
+     * @param requiredNumber A number of repositories to be found.
+     */
+    public void searchRepos(int requiredNumber) {
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        executor.submit(() -> {
+            RepositoryService repositoryService = new RepositoryService();
+            int page = 1;
+            int counter = 0;
+            try {
+                while (counter < requiredNumber) {
+                    List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
+
+                    for (SearchRepository repo : repos) {
+                        String link = "https://github.com/" + repo.toString();
+                        System.out.println("Checking " + link);
+                        if (isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
+                            Repo result = handle(link);
+                            if (!Objects.equals(result, null)) {
+                                counter++;
+                            }
+                            if (counter == requiredNumber) {
+                                return;
+                            }
+                        }
+                    }
+
+                    page++;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        executor.shutdown();
+    }
+
+    /**
+     * Handle multiple URLs taken from a text file.
+     * @param file A file which contains URLs to repositories on GitHub.
+     */
+    public void handleLinksFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (isMavenRepository(line)) {
+                    update(line);
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Couldn't open file " + file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gather information on dependencies used in given repositories
+     * @param repos List of repositories.
+     * @return A map-like list, keys are unique dependency names, values are numbers of dependency usages.
+     */
     public List<Map.Entry<String, Integer>> catalogDependencies(List<Repo> repos) {
         List<Map.Entry<String, Integer>> result = new ArrayList<>();
         List<String> dependenciesList = new ArrayList<>();
@@ -207,6 +225,11 @@ public class ReposHandler {
         return result;
     }
 
+    /**
+     * Structure summary into list of 'repositories' to pass to summary table.
+     * @param repos List of repositories to summarize.
+     * @return Mean and Total special 'repositories'.
+     */
     public List<Repo> calculateSummary(List<Repo> repos) {
         List<Repo> result = new ArrayList<>();
         result.add(evaluateMean(repos));
@@ -214,6 +237,11 @@ public class ReposHandler {
         return result;
     }
 
+    /**
+     * Summarize information on repositories: calculate total values.
+     * @param repos List of repositories to summarize.
+     * @return Total special 'repository'.
+     */
     public Repo evaluateTotal(List<Repo> repos) {
         int numberOfRepos = repos.size();
 
@@ -260,6 +288,11 @@ public class ReposHandler {
                 totalNumberOfDependenciesAsSet);
     }
 
+    /**
+     * Summarize information on repositories: calculate total values.
+     * @param repos List of repositories to summarize.
+     * @return Mean special 'repository'.
+     */
     public Repo evaluateMean(List<Repo> repos) {
         int numberOfRepos = repos.size();
 

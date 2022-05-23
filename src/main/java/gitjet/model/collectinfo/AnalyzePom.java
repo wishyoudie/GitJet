@@ -1,9 +1,5 @@
 package gitjet.model.collectinfo;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -41,7 +37,7 @@ public class AnalyzePom {
         }
     }
 
-    public static boolean isMavenRepository(String link) throws Exception {
+    public static boolean isMavenRepository(String link) {
 
         String branch = getDefaultBranch(link);
 
@@ -65,7 +61,7 @@ public class AnalyzePom {
         return false;
     }
 
-    public static String getDefaultBranch(String link) throws Exception {
+    public static String getDefaultBranch(String link) {
         String url = "https://api.github.com/repos/" + getAuthorFromLink(link) + "/" + getNameFromLink(link);
         String data = readUrl(url);
 
@@ -85,13 +81,10 @@ public class AnalyzePom {
         return branch;
     }
 
-    private static String readUrl(String urlString) throws Exception {
-        BufferedReader reader = null;
-        int counter = 0;
-        while (true) {
-            try {
-                URL url = new URL(urlString);
-                reader = new BufferedReader(new InputStreamReader(url.openStream()));
+    private static String readUrl(String urlString) {
+        for (int i = 1; i <= 5; i++) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
+
                 StringBuilder buffer = new StringBuilder();
                 int read;
                 char[] chars = new char[1024];
@@ -101,15 +94,9 @@ public class AnalyzePom {
 
                 return buffer.toString();
             } catch (IOException e) {
-                counter++;
-                System.err.println("Can't connect, retrying: " + counter + "/5");
-                if (counter == 5) {
-                    return null;
-                }
-            } finally {
-                if (reader != null)
-                    reader.close();
+                System.err.println("Can't connect, retrying: " + i + "/5");
             }
         }
+        return null;
     }
 }
