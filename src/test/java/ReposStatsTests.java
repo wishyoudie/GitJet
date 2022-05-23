@@ -1,3 +1,5 @@
+import gitjet.model.Repo;
+import gitjet.model.ReposHandler;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
@@ -19,11 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReposStatsTests {
 
     private static File repo1, repo2;
+    private static Repo handledRepo1, handledRepo2;
+    private static final ReposHandler reposHandler = new ReposHandler();
 
     @BeforeAll
     static void setUp() throws GitCloningException, IOException {
         repo1 = runCloning("https://github.com/s1ckoleg/PolytechTerminalApp", "TestRepo1");
         repo2 = runCloning("https://github.com/wishyoudie/coursework_sem2_t1", "TestRepo2");
+        handledRepo1 = reposHandler.handle("https://github.com/s1ckoleg/PolytechTerminalApp");
+        handledRepo2 = reposHandler.handle("https://github.com/wishyoudie/coursework_sem2_t1");
     }
 
     @AfterAll
@@ -31,6 +37,15 @@ class ReposStatsTests {
         deleteClone(repo1);
         deleteClone(repo2);
         new File("clones").deleteOnExit();
+    }
+
+    @Test
+    void authorTest() {
+        String repo1author = handledRepo1.getAuthor();
+        String repo2author = handledRepo2.getAuthor();
+
+        assertEquals("s1ckoleg", repo1author);
+        assertEquals("wishyoudie", repo2author);
     }
 
     @Test
@@ -48,14 +63,18 @@ class ReposStatsTests {
     @Test
     void checkReadmeTest() {
         assertFalse(isReadmeInProject(repo1));
+        assertEquals("-", handledRepo1.getHasReadMe());
         assertTrue(isReadmeInProject(repo2));
+        assertEquals("+", handledRepo2.getHasReadMe());
     }
 
     @Test
     void testsSizeTest() throws IOException {
         CheckTests checkTests1 = new CheckTests();
         CheckTests checkTests2 = new CheckTests();
+        assertEquals("+", handledRepo1.getHasTests());
         assertEquals(210, checkTests1.getNumberOfLinesInTests(repo1));
+        assertEquals("+", handledRepo2.getHasTests());
         assertEquals(234, checkTests2.getNumberOfLinesInTests(repo2));
     }
 
