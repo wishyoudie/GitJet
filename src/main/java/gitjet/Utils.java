@@ -1,9 +1,16 @@
 package gitjet;
 
+import gitjet.controller.RefreshController;
+import gitjet.controller.WarningController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Control;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Utils {
@@ -12,9 +19,25 @@ public class Utils {
      * Kill window of control element.
      * @param ctrl Control element.
      */
-    public static void killWindow(Control ctrl) {
+    public static void closeWindow(Control ctrl) {
         Stage stage = (Stage) ctrl.getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Creates a new warning window and provides it with given controller.
+     * @param controller Controller instance to bind to window.
+     */
+    public static void createWarningWindow(WarningController controller) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("warning-view.fxml"));
+        fxmlLoader.setController(controller);
+        Scene scene = new Scene(fxmlLoader.load(), 300, 200);
+        Stage refreshStage = new Stage();
+        refreshStage.setTitle("Refresh info");
+        refreshStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
+        refreshStage.setScene(scene);
+        refreshStage.initModality(Modality.APPLICATION_MODAL);
+        refreshStage.show();
     }
 
     /**

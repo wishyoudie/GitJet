@@ -8,8 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.ClearDataController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="91.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -19,34 +20,32 @@
             <Insets left="15.0" top="50.0" />
          </HBox.margin>
       </ImageView>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
          <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20">
-               <padding>
-                  <Insets bottom="10" left="20" right="20" top="10" />
-               </padding>
-               <children>
-                  <Label alignment="BASELINE_CENTER" text="Are you sure?">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets top="60.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
-            </HBox>
+            <Label alignment="BASELINE_CENTER" contentDisplay="CENTER" text="Are you sure?" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Label>
+            <Text fx:id="warningText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hehe" textAlignment="CENTER" wrappingWidth="194.13671875">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
             <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20">
                <padding>
                   <Insets bottom="40.0" left="20.0" right="20.0" top="10.0" />
                </padding>
                <children>
-                  <Button fx:id="clearProceedButton" mnemonicParsing="false" onAction="#clearProceed" prefHeight="40.0" prefWidth="80.0" text="Yes">
+                  <Button fx:id="warningProceedButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Yes">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="clearCancelButton" defaultButton="true" mnemonicParsing="false" onAction="#clearCancel" prefHeight="40.0" prefWidth="80.0" text="No">
+                  <Button fx:id="warningCancelButton" defaultButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="No">
                      <font>
                         <Font size="14.0" />
                      </font>

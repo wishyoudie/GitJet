@@ -1,12 +1,13 @@
 package gitjet.controller;
 
-import static gitjet.Utils.killWindow;
+import static gitjet.Utils.closeWindow;
 
 import gitjet.Utils;
 import gitjet.model.Errors;
 import gitjet.model.ReposHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,27 +19,43 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Controller of 'Clear data' window, which appears after click on the 'x' button in start menu.
+ * Controller of 'Refresh data' window, which appears after click on the arrows button in start menu.
  */
-public class RefreshController {
+public class RefreshController implements WarningController {
 
     /**
      * 'Yes' button in refreshing data window.
      */
     @FXML
-    private Button refreshProceedButton;
+    private Button warningProceedButton;
 
     /**
      * 'No' button in refreshing data window.
      */
     @FXML
-    private Button refreshCancelButton;
+    private Button warningCancelButton;
+
+    /**
+     * Text field in refreshing data window.
+     */
+    @FXML
+    private Text warningText;
+
+    /**.
+     * Initializer.
+     */
+    @FXML
+    protected void initialize() {
+        warningText.setText("This action will refresh all collected data");
+        warningProceedButton.setOnAction(actionEvent -> warningButtonProceed());
+        warningCancelButton.setOnAction(actionEvent -> warningButtonCancel());
+    }
 
     /**
      * 'Yes' button in refreshing data window pressing handler.
      */
     @FXML
-    protected void refreshProceed() {
+    public void warningButtonProceed() {
         ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(() -> {
                     List<String> repos = new ArrayList<>();
@@ -59,14 +76,14 @@ public class RefreshController {
                     }
                 });
         executor.shutdown();
-        killWindow(refreshProceedButton);
+        closeWindow(warningProceedButton);
     }
 
     /**
      * 'No' button in refreshing data window pressing handler.
      */
     @FXML
-    protected void refreshCancel() {
-        killWindow(refreshCancelButton);
+    public void warningButtonCancel() {
+        closeWindow(warningCancelButton);
     }
 }

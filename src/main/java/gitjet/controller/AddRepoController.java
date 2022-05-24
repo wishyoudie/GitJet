@@ -42,7 +42,7 @@ public class AddRepoController {
         } else {
             System.out.println("Warning");
         }
-        killWindow(newRepoField);
+        closeWindow(newRepoField);
     }
 
     /**
@@ -61,6 +61,6 @@ public class AddRepoController {
         if (file != null) {
             new ReposHandler().handleLinksFile(file);
         }
-        killWindow(newRepoOpenFileButton);
+        closeWindow(newRepoOpenFileButton);
     }
 }
