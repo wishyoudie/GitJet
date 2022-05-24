@@ -11,6 +11,8 @@ import java.nio.file.Path;
 
 public class CloneProjects {
 
+    private final static int NUMBER_OF_RETRIES = 5;
+
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
 
         Path path = Path.of("clones");
@@ -18,10 +20,10 @@ public class CloneProjects {
             Files.createDirectory(path);
         }
 
-        File localPath = Files.createTempDirectory(path, repoName).toFile();
+        File localFile = Files.createTempDirectory(path, repoName).toFile();
 
-        if (!localPath.delete()) {
-            throw new IOException("Could not delete temporary file " + localPath);
+        if (!localFile.delete()) {
+            throw new IOException("Could not delete temporary file " + localFile);
         }
 
         int counter = 0;
@@ -29,14 +31,14 @@ public class CloneProjects {
         while (true) {
             try (Git git = Git.cloneRepository()
                     .setURI(repo)
-                    .setDirectory(localPath)
+                    .setDirectory(localFile)
                     .call()) {
                 System.out.println("Completed Cloning " + repoName);
-                return localPath;
+                return localFile;
             } catch (GitAPIException e) {
                 counter++;
-                System.err.println("Can't clone project, retrying: " + counter + "/5");
-                if (counter == 5) {
+                System.err.println("Can't clone project, retrying: " + counter + "/" + NUMBER_OF_RETRIES);
+                if (counter == NUMBER_OF_RETRIES) {
                     System.err.println(Errors.CLONE_ERROR.getMessage());
                     System.err.println("Skipping " + repo);
                     return null;
@@ -45,11 +47,11 @@ public class CloneProjects {
         }
     }
 
-    public static void deleteClone(File localPath) {
+    public static void deleteClone(File localFile) {
         try {
-            FileUtils.deleteDirectory(localPath);
+            FileUtils.deleteDirectory(localFile);
         } catch (IOException e) {
-            System.err.println("Couldn't delete clone " + localPath);
+            System.err.println("Couldn't delete clone " + localFile);
         }
     }
 }

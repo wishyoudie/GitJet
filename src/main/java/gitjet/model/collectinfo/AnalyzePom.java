@@ -5,13 +5,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 import org.json.*;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.Repo.getNameFromLink;
 
 public class AnalyzePom {
 
-    public static Set<String> getDependencies(File file) throws IOException {
+    private String githubLogin, githubPassword;
+
+    public Set<String> getDependencies(File file) throws IOException {
 
         File pom = new File(file + File.separator + "pom.xml");
 
@@ -37,7 +42,7 @@ public class AnalyzePom {
         }
     }
 
-    public static boolean isMavenRepository(String link) {
+    public boolean isMavenRepository(String link) throws IOException {
 
         String branch = getDefaultBranch(link);
 
@@ -61,42 +66,18 @@ public class AnalyzePom {
         return false;
     }
 
-    public static String getDefaultBranch(String link) {
-        String url = "https://api.github.com/repos/" + getAuthorFromLink(link) + "/" + getNameFromLink(link);
-        String data = readUrl(url);
+    public String getDefaultBranch(String link) throws IOException {
+        GitHub gitHub = new GitHubBuilder().withPassword(githubLogin, githubPassword).build();
+        GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
 
-        if (data == null) {
-            return null;
-        }
-
-        JSONArray jsonArr = new JSONArray("[" + data + "]");
-        String branch = null;
-
-        for (int i = 0; i < jsonArr.length(); i++) {
-            JSONObject jsonObj = jsonArr.getJSONObject(i);
-
-            branch = jsonObj.get("default_branch").toString();
-        }
-
-        return branch;
+        return ghRepository.getDefaultBranch();
     }
 
-    private static String readUrl(String urlString) {
-        for (int i = 1; i <= 5; i++) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
+    public void setGithubPassword(String githubPassword) {
+        this.githubPassword = githubPassword;
+    }
 
-                StringBuilder buffer = new StringBuilder();
-                int read;
-                char[] chars = new char[1024];
-
-                while ((read = reader.read(chars)) != -1)
-                    buffer.append(chars, 0, read);
-
-                return buffer.toString();
-            } catch (IOException e) {
-                System.err.println("Can't connect, retrying: " + i + "/5");
-            }
-        }
-        return null;
+    public void setGithubLogin(String githubLogin) {
+        this.githubLogin = githubLogin;
     }
 }

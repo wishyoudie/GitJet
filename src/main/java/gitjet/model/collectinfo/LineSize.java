@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static gitjet.Utils.getFilesArray;
 
@@ -27,7 +28,7 @@ public class LineSize {
                 counter += iterateStrings(0, new File(String.valueOf(file)));
             } else {
                 String fileExtension = getExtensionByStringHandling(file.getName());
-                if (Objects.equals(fileExtension, "java") || Objects.equals(fileExtension, "kt")) {
+                if (Set.of("java", "kt").contains(fileExtension)) {
                     counter += countStrings(file);
                 }
             }

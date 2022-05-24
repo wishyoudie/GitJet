@@ -6,6 +6,7 @@ module ru.spbstu.gitjet {
     requires org.eclipse.egit.github.core;
     requires java.sql;
     requires org.json;
+    requires org.kohsuke.github.api;
 
     opens gitjet to javafx.fxml;
     exports gitjet;
