@@ -13,6 +13,8 @@ import java.io.*;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import static gitjet.model.Errors.DIRECTORY_ERROR;
+
 public class Utils {
 
     /**
@@ -50,7 +52,7 @@ public class Utils {
 
         File[] filesList = file.listFiles();
         if (filesList == null) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException(DIRECTORY_ERROR.getMessage());
         }
 
         return filesList;
