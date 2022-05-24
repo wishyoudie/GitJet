@@ -14,7 +14,7 @@ import static gitjet.model.Repo.getNameFromLink;
 
 public class AnalyzePom {
 
-    private String githubLogin, githubPassword;
+    private String githubToken;
 
     public Set<String> getDependencies(File file) throws IOException {
 
@@ -67,17 +67,15 @@ public class AnalyzePom {
     }
 
     public String getDefaultBranch(String link) throws IOException {
-        GitHub gitHub = new GitHubBuilder().withPassword(githubLogin, githubPassword).build();
+        GitHub gitHub = new GitHubBuilder().withOAuthToken(githubToken).build();
         GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
-
-        return ghRepository.getDefaultBranch();
+        String branch = ghRepository.getDefaultBranch();
+        System.out.println(branch);
+        System.out.println(gitHub.getRateLimit());
+        return branch;
     }
 
-    public void setGithubPassword(String githubPassword) {
-        this.githubPassword = githubPassword;
-    }
-
-    public void setGithubLogin(String githubLogin) {
-        this.githubLogin = githubLogin;
+    public void setGithubToken(String githubToken) {
+        this.githubToken = githubToken;
     }
 }

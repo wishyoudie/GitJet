@@ -2,10 +2,13 @@ package gitjet.model;
 
 import gitjet.Utils;
 import gitjet.model.clonerepo.GitCloningException;
+import gitjet.model.collectinfo.AnalyzePom;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.*;
 import java.util.*;
@@ -15,8 +18,6 @@ import java.util.concurrent.Executors;
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
-import static gitjet.model.collectinfo.AnalyzePom.getDependencies;
-import static gitjet.model.collectinfo.AnalyzePom.isMavenRepository;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 import static gitjet.model.Repo.getNameFromLink;
@@ -106,15 +107,16 @@ public class ReposHandler {
             clone = runCloning(link, repoName);
             int numberOfLinesInTests = new CheckTests().getNumberOfLinesInTests(clone);
             CommitsHistory commitsHistory = new CommitsHistory(clone);
+            AnalyzePom analyzePom = new AnalyzePom();
             return new Repo(repoName,
                     getAuthorFromLink(link),
                     commitsHistory.getNumberOfContributors(),
                     commitsHistory.getNumberOfCommits(),
-                    getAmountOfLines(clone),
+                    getAmountOfLines(clone) - numberOfLinesInTests,
                     (numberOfLinesInTests != 0),
                     numberOfLinesInTests,
                     isReadmeInProject(clone),
-                    getDependencies(clone));
+                    analyzePom.getDependencies(clone));
         } catch (GitCloningException | IOException e) {
             e.printStackTrace();
             return null;
@@ -133,6 +135,8 @@ public class ReposHandler {
             RepositoryService repositoryService = new RepositoryService();
             int page = 1;
             int counter = 0;
+            AnalyzePom analyzePom = new AnalyzePom();
+            analyzePom.setGithubToken("token");
             try {
                 while (counter < requiredNumber) {
                     List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
@@ -140,7 +144,7 @@ public class ReposHandler {
                     for (SearchRepository repo : repos) {
                         String link = "https://github.com/" + repo.toString();
                         System.out.println("Checking " + link);
-                        if (isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
+                        if (analyzePom.isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
                             Repo result = handle(link);
                             if (!Objects.equals(result, null)) {
                                 counter++;
@@ -169,7 +173,9 @@ public class ReposHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (isMavenRepository(line)) {
+                AnalyzePom analyzePom = new AnalyzePom();
+                analyzePom.setGithubToken("token");
+                if (analyzePom.isMavenRepository(line)) {
                     update(line);
                 }
             }
