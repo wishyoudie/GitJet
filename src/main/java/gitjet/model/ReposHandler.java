@@ -72,10 +72,10 @@ public class ReposHandler {
         ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(() -> {
             String name = getNameFromLink(link);
-            if (alreadyHandled(name)) {
-                List<Repo> data = readData("data.dat");
-                Utils.cleanFile("data.dat");
-                try (FileWriter writer = new FileWriter("data.dat", true)) {
+            try (FileWriter writer = new FileWriter("data.dat", true)) {
+                if (alreadyHandled(name)) {
+                    List<Repo> data = readData("data.dat");
+                    Utils.cleanFile("data.dat");
                     for (Repo repo : data) {
                         if (Objects.equals(repo.getName(), name)) {
                             writer.append(handle(link).toString()).append(System.lineSeparator());
@@ -83,11 +83,11 @@ public class ReposHandler {
                             writer.append(repo.toString()).append(System.lineSeparator());
                         }
                     }
-                } catch (IOException e) {
-                    throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+                } else {
+                    writer.append(handle(link).toString()).append(System.lineSeparator());
                 }
-            } else {
-                handle(link);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
             }
         });
         executor.shutdown();
@@ -106,7 +106,6 @@ public class ReposHandler {
             clone = runCloning(link, repoName);
             int numberOfLinesInTests = new CheckTests().getNumberOfLinesInTests(clone);
             CommitsHistory commitsHistory = new CommitsHistory(clone);
-
             return new Repo(repoName,
                     getAuthorFromLink(link),
                     commitsHistory.getNumberOfContributors(),
