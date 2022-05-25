@@ -126,17 +126,17 @@ public class ReposHandler {
     public void searchRepos(int requiredNumber) throws GitCloningException, IOException {
 //        ExecutorService executor = Executors.newFixedThreadPool(1);
             RepositoryService repositoryService = new RepositoryService();
-            int page = -1;
+            int page = 1;
             int counter = 0;
             AnalyzePom analyzePom = new AnalyzePom();
             try {
                 while (counter < requiredNumber) {
-                    List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
+                    List<SearchRepository> repos = repositoryService.searchRepositories("pom.xml in:file", "java", page);
 
                     for (SearchRepository repo : repos) {
                         String link = "https://github.com/" + repo.toString();
                         System.out.println("Checking " + link);
-                        if (analyzePom.isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
+                        if (!alreadyHandled(getNameFromLink(link))) {
                             Repo result = handle(link);
                             if (!Objects.equals(result, null)) {
                                 counter++;
@@ -148,7 +148,7 @@ public class ReposHandler {
                         }
                     }
 
-                    page--;
+                    page++;
                 }
             } catch (IOException | GitCloningException e) {
                 e.printStackTrace();
