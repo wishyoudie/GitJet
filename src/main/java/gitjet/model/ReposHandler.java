@@ -85,8 +85,6 @@ public class ReposHandler {
                 } else {
                     writer.append(handle(link).toString()).append(System.lineSeparator());
                 }
-            } catch (GitCloningException | IOException e) {
-                throw e;
             }
     }
 
