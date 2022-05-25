@@ -56,13 +56,13 @@
                   </AnchorPane>
             </content>
           </TitledPane>
-            <TitledPane animated="false" text="Connection attempts threshold">
+            <TitledPane animated="false" text="Connection threshold">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
                             <HBox alignment="CENTER" prefHeight="25.0" prefWidth="500.0">
                                 <children>
-                                    <Label text="GitHub Token" />
+                                    <Label text="Attempts threshold" />
                                     <TextField fx:id="connectionThresholdField">
                                         <HBox.margin>
                                             <Insets left="10.0" />
