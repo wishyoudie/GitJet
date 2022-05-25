@@ -130,12 +130,12 @@ public class ReposHandler {
             int counter = 0;
             try {
                 while (counter < requiredNumber) {
-                    List<SearchRepository> repos = repositoryService.searchRepositories("file:pom.xml", "java", page);
-
+                    List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
+                    AnalyzePom analyzePom = new AnalyzePom();
                     for (SearchRepository repo : repos) {
                         String link = "https://github.com/" + repo.toString();
                         System.out.println("Checking " + link);
-                        if (!alreadyHandled(getNameFromLink(link))) {
+                        if (analyzePom.isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
                             Repo result = handle(link);
                             if (!Objects.equals(result, null)) {
                                 counter++;
