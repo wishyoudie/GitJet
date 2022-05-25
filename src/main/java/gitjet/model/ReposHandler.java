@@ -33,6 +33,9 @@ public class ReposHandler {
             List<Repo> result = new ArrayList<>();
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.isEmpty()) {
+                    continue;
+                }
                 result.add(new Repo(line));
             }
             return result;

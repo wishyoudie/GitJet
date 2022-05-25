@@ -133,7 +133,7 @@ public class StartController {
     @FXML
     protected void newButtonClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("add-repo-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 400, 200);
         Stage getRepoStage = new Stage();
         getRepoStage.setTitle("Analyze new repository");
         getRepoStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/button_new.png"))));
