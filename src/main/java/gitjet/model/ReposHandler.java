@@ -126,7 +126,7 @@ public class ReposHandler {
     public void searchRepos(int requiredNumber) throws GitCloningException, IOException {
 //        ExecutorService executor = Executors.newFixedThreadPool(1);
             RepositoryService repositoryService = new RepositoryService();
-            int page = 1;
+            int page = -1;
             int counter = 0;
             AnalyzePom analyzePom = new AnalyzePom();
             try {
@@ -148,7 +148,7 @@ public class ReposHandler {
                         }
                     }
 
-                    page++;
+                    page--;
                 }
             } catch (IOException | GitCloningException e) {
                 e.printStackTrace();
