@@ -1,2 +1,3 @@
 username:example
 token:example
+connection_threshold:5
