@@ -14,17 +14,32 @@ import java.util.Map;
 
 public class SettingsController {
 
+    /**
+     * Username field in settings.
+     */
     @FXML
     private TextField usernameField;
 
+    /**
+     * GitHub token field in settings.
+     */
     @FXML
     private TextField tokenField;
 
+    /**
+     * Save button in settings.
+     */
     @FXML
     private Button saveButton;
 
+    /**
+     * Settings map.
+     */
     private final Map<String, String> settings = new HashMap<>();
 
+    /**
+     * Initializer.
+     */
     @FXML
     protected void initialize() {
         readSettings();
@@ -32,6 +47,9 @@ public class SettingsController {
         tokenField.setText(settings.get("token"));
     }
 
+    /**
+     * Save settings in memory button.
+     */
     @FXML
     protected void saveButtonPressed() {
         settings.replace("username", usernameField.getText());
@@ -40,6 +58,9 @@ public class SettingsController {
         Utils.closeWindow(saveButton);
     }
 
+    /**
+     * Read settings from memory.
+     */
     private void readSettings() {
         try (BufferedReader br = new BufferedReader(new FileReader("settings.dat"))) {
             String line;
@@ -54,6 +75,9 @@ public class SettingsController {
         }
     }
 
+    /**
+     * Change settings in memory.
+     */
     private void changeSettings() {
         try (FileWriter writer = new FileWriter("settings.dat", true)) {
             Utils.cleanFile("settings.dat");
