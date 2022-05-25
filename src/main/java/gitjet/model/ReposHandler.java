@@ -128,10 +128,9 @@ public class ReposHandler {
             RepositoryService repositoryService = new RepositoryService();
             int page = 1;
             int counter = 0;
-            AnalyzePom analyzePom = new AnalyzePom();
             try {
                 while (counter < requiredNumber) {
-                    List<SearchRepository> repos = repositoryService.searchRepositories("pom.xml in:file", "java", page);
+                    List<SearchRepository> repos = repositoryService.searchRepositories("file:pom.xml", "java", page);
 
                     for (SearchRepository repo : repos) {
                         String link = "https://github.com/" + repo.toString();

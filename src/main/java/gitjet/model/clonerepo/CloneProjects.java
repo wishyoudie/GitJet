@@ -31,11 +31,12 @@ public class CloneProjects {
         int counter = 0;
 
         while (true) {
+            System.out.println("Start cloning: " + repoName);
             try (Git git = Git.cloneRepository()
                     .setURI(repo)
                     .setDirectory(localFile)
                     .call()) {
-                System.out.println("Completed Cloning " + repoName);
+                System.out.println("Completed cloning: " + repoName);
                 return localFile;
             } catch (GitAPIException e) {
                 counter++;
