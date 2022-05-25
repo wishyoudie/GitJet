@@ -69,7 +69,7 @@ public class AnalyzePom {
             GitHub gitHub = new GitHubBuilder().withOAuthToken(getSetting("token")).build();
             GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
             String branch = ghRepository.getDefaultBranch();
-            System.out.println(gitHub.getRateLimit());
+            //System.out.println(gitHub.getRateLimit());
             return branch;
         } catch (IOException e) {
             e.printStackTrace();

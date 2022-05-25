@@ -135,7 +135,7 @@ public class ReposHandler {
                     for (SearchRepository repo : repos) {
                         String link = "https://github.com/" + repo.toString();
                         System.out.println("Checking " + link);
-                        if (analyzePom.isMavenRepository(link) && !alreadyHandled(getNameFromLink(link))) {
+                        if (!alreadyHandled(getNameFromLink(link)) && analyzePom.isMavenRepository(link)) {
                             Repo result = handle(link);
                             if (!Objects.equals(result, null)) {
                                 counter++;
