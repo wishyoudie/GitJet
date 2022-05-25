@@ -3,6 +3,7 @@ package gitjet;
 import gitjet.controller.ErrorController;
 import gitjet.controller.RefreshController;
 import gitjet.controller.WarningController;
+import gitjet.model.Errors;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
@@ -11,6 +12,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -111,5 +114,24 @@ public class Utils {
         }
     }
 
-
+    /**
+     * Get setting from settings file by its name.
+     * @param parameterName Name of setting.
+     * @return Setting value for given name.
+     */
+    public static String getSetting(String parameterName) {
+        try (BufferedReader br = new BufferedReader(new FileReader("settings.dat"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                List<String> parts = Arrays.asList(line.split(":"));
+                if (Objects.equals(parts.get(0), parameterName)) {
+                    return parts.get(1);
+                }
+            }
+        } catch (IOException e) {
+            Utils.createErrorWindow("Couldn't find setting " + parameterName);
+            throw new IllegalStateException(Errors.SETTINGS_ERROR.getMessage());
+        }
+        return null;
+    }
 }

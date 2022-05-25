@@ -6,17 +6,15 @@ import java.net.URL;
 import java.util.*;
 
 import gitjet.model.Errors;
-import org.json.*;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import static gitjet.Utils.getSetting;
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.Repo.getNameFromLink;
 
 public class AnalyzePom {
-
-    private String githubToken;
 
     public Set<String> getDependencies(File file) throws IOException {
 
@@ -70,18 +68,14 @@ public class AnalyzePom {
 
     public String getDefaultBranch(String link) throws IOException {
         try {
-            GitHub gitHub = new GitHubBuilder().withOAuthToken(githubToken).build();
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(getSetting("token")).build();
             GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
             String branch = ghRepository.getDefaultBranch();
-            System.out.println(branch);
             System.out.println(gitHub.getRateLimit());
             return branch;
         } catch (IOException e) {
+            e.printStackTrace();
             throw new IOException(Errors.TOKEN_ERROR.getMessage());
         }
-    }
-
-    public void setGithubToken(String githubToken) {
-        this.githubToken = githubToken;
     }
 }

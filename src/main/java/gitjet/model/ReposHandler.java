@@ -7,14 +7,9 @@ import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
-import org.eclipse.jgit.util.IO;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
@@ -133,7 +128,6 @@ public class ReposHandler {
             int page = 1;
             int counter = 0;
             AnalyzePom analyzePom = new AnalyzePom();
-            analyzePom.setGithubToken("token");
             try {
                 while (counter < requiredNumber) {
                     List<SearchRepository> repos = repositoryService.searchRepositories("size:>0", "java", page);
@@ -168,9 +162,8 @@ public class ReposHandler {
     public void handleLinksFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
+            AnalyzePom analyzePom = new AnalyzePom();
             while ((line = reader.readLine()) != null) {
-                AnalyzePom analyzePom = new AnalyzePom();
-                analyzePom.setGithubToken("token");
                 if (analyzePom.isMavenRepository(line)) {
                     update(line);
                 }

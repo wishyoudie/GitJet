@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" />
+<VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitjet.controller.SettingsController">
+   <children>
+      <Accordion maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0">
+        <panes>
+            <TitledPane animated="false" text="Username">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <HBox alignment="CENTER" prefHeight="25.0" prefWidth="500.0">
+                                <children>
+                                    <Label text="Your name" />
+                                    <TextField fx:id="usernameField">
+                                        <HBox.margin>
+                                            <Insets left="10.0" />
+                                        </HBox.margin>
+                                    </TextField>
+                                </children>
+                                <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                </padding>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </TitledPane>
+          <TitledPane animated="false" text="Token">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="500.0">
+                           <children>
+                              <Label text="GitHub Token" />
+                              <TextField fx:id="tokenField">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonPressed" text="Save">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
+   </children>
+</VBox>

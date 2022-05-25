@@ -1,6 +1,7 @@
 package gitjet.controller;
 
 import gitjet.Application;
+import gitjet.Utils;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
