@@ -1,5 +1,6 @@
 package gitjet;
 
+import gitjet.controller.ErrorController;
 import gitjet.controller.RefreshController;
 import gitjet.controller.WarningController;
 import javafx.fxml.FXMLLoader;
@@ -34,12 +35,32 @@ public class Utils {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("warning-view.fxml"));
         fxmlLoader.setController(controller);
         Scene scene = new Scene(fxmlLoader.load(), 300, 200);
-        Stage refreshStage = new Stage();
-        refreshStage.setTitle("Refresh info");
-        refreshStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
-        refreshStage.setScene(scene);
-        refreshStage.initModality(Modality.APPLICATION_MODAL);
-        refreshStage.show();
+        Stage warningStage = new Stage();
+        warningStage.setTitle("Refresh info");
+        warningStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
+        warningStage.setScene(scene);
+        warningStage.initModality(Modality.APPLICATION_MODAL);
+        warningStage.show();
+    }
+
+    /**
+     * Creates new error window with custom text.
+     * @param text Error text message.
+     */
+    public static void createErrorWindow(String text) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("error-view.fxml"));
+            fxmlLoader.setController(new ErrorController(text));
+            Scene scene = new Scene(fxmlLoader.load(), 400, 400);
+            Stage errorStage = new Stage();
+            errorStage.setTitle("Error");
+            errorStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
+            errorStage.setScene(scene);
+            errorStage.initModality(Modality.APPLICATION_MODAL);
+            errorStage.show();
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't find FXML preset for error message.");
+        }
     }
 
     /**

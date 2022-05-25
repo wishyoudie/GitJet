@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 
@@ -40,7 +41,7 @@ public class AddRepoController {
         } else if (isNumber(textFieldValue)) {
             reposHandler.searchRepos(Integer.parseInt(textFieldValue));
         } else {
-            System.out.println("Warning");
+            createErrorWindow("Unexpected input. Consider using URL to repository or a number of repositories to be found.");
         }
         closeWindow(newRepoField);
     }

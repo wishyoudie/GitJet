@@ -2,18 +2,26 @@ package gitjet.controller;
 
 import gitjet.Application;
 import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
 import java.util.Objects;
+
+import static gitjet.Utils.createErrorWindow;
+import static gitjet.Utils.createWarningWindow;
 
 /**
  * Controller of start menu window.
@@ -31,6 +39,21 @@ public class StartController {
      */
     @FXML
     private Label hintText;
+
+    /**
+     * Image spinner in status bar.
+     */
+    @FXML
+    private ImageView statusSpinner;
+
+    /**
+     * Text label in status bar.
+     */
+    @FXML
+    private Label statusLabel;
+
+    @FXML
+    private HBox statusBar;
 
     /**
      * Mouse hover 'New' button handler.
@@ -83,6 +106,15 @@ public class StartController {
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.play();
+
+        RotateTransition rotate = new RotateTransition();
+        rotate.setNode(statusSpinner);
+        rotate.setDuration(Duration.millis(1000));
+        rotate.setCycleCount(TranslateTransition.INDEFINITE);
+        rotate.setByAngle(360);
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.play();
+
     }
 
     /**
@@ -123,14 +155,7 @@ public class StartController {
      */
     @FXML
     protected void refreshButtonClick() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("refresh-data-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 300, 200);
-        Stage clearDataStage = new Stage();
-        clearDataStage.setTitle("Warning");
-        clearDataStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
-        clearDataStage.setScene(scene);
-        clearDataStage.initModality(Modality.APPLICATION_MODAL);
-        clearDataStage.show();
+        createWarningWindow(new RefreshController());
     }
 
     /**
@@ -139,13 +164,14 @@ public class StartController {
      */
     @FXML
     protected void clearButtonClick() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("clear-data-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 300, 200);
-        Stage clearDataStage = new Stage();
-        clearDataStage.setTitle("Warning");
-        clearDataStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
-        clearDataStage.setScene(scene);
-        clearDataStage.initModality(Modality.APPLICATION_MODAL);
-        clearDataStage.show();
+        createWarningWindow(new ClearDataController());
+    }
+
+    public void setStatus(String status) {
+        statusLabel.setText(status);
+    }
+
+    public void setStatusBarVisible(boolean visible) {
+        statusBar.setVisible(visible);
     }
 }
