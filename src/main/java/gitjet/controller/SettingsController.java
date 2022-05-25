@@ -59,11 +59,16 @@ public class SettingsController {
      */
     @FXML
     protected void saveButtonPressed() {
-        settings.replace("username", usernameField.getText());
-        settings.replace("token", tokenField.getText());
-        settings.replace("connection_threshold", connectionThresholdField.getText());
-        changeSettings();
-        Utils.closeWindow(saveButton);
+        try {
+            settings.replace("username", usernameField.getText());
+            settings.replace("token", tokenField.getText());
+            Integer.parseInt(connectionThresholdField.getText());
+            settings.replace("connection_threshold", connectionThresholdField.getText());
+            changeSettings();
+            Utils.closeWindow(saveButton);
+        } catch (NumberFormatException e) {
+            Utils.createErrorWindow(String.format("Unsupported connection threshold setting value.\n'%s' is not a valid number.", connectionThresholdField.getText()));
+        }
     }
 
     /**
