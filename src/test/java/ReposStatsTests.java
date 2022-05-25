@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
@@ -69,12 +68,10 @@ class ReposStatsTests {
 
     @Test
     void testsSizeTest() throws IOException {
-        CheckTests checkTests1 = new CheckTests();
-        CheckTests checkTests2 = new CheckTests();
         assertEquals("+", handledRepo1.getHasTests());
-        assertEquals(210, checkTests1.getNumberOfLinesInTests(repo1));
+        assertEquals(210, CheckTests.getNumberOfLinesInTests(repo1));
         assertEquals("+", handledRepo2.getHasTests());
-        assertEquals(234, checkTests2.getNumberOfLinesInTests(repo2));
+        assertEquals(234, CheckTests.getNumberOfLinesInTests(repo2));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package gitjet.model.clonerepo;
 
+import gitjet.Utils;
 import gitjet.model.Errors;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -8,10 +9,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class CloneProjects {
 
-    private final static int NUMBER_OF_RETRIES = 5;
+    private final static int NUMBER_OF_RETRIES = Integer.parseInt(Objects.requireNonNull(Utils.getSetting("connection_threshold")));
 
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
 

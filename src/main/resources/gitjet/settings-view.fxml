@@ -56,6 +56,27 @@
                   </AnchorPane>
             </content>
           </TitledPane>
+            <TitledPane animated="false" text="Connection attempts threshold">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <HBox alignment="CENTER" prefHeight="25.0" prefWidth="500.0">
+                                <children>
+                                    <Label text="GitHub Token" />
+                                    <TextField fx:id="connectionThresholdField">
+                                        <HBox.margin>
+                                            <Insets left="10.0" />
+                                        </HBox.margin>
+                                    </TextField>
+                                </children>
+                                <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                </padding>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </TitledPane>
         </panes>
       </Accordion>
       <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonPressed" text="Save">

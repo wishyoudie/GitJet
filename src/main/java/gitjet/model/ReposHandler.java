@@ -3,7 +3,6 @@ package gitjet.model;
 import gitjet.Utils;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.AnalyzePom;
-import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -15,6 +14,7 @@ import static gitjet.model.Repo.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
+import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 import static gitjet.model.Repo.getNameFromLink;
 
@@ -98,7 +98,7 @@ public class ReposHandler {
         try {
             String repoName = getNameFromLink(link);
             clone = runCloning(link, repoName);
-            int numberOfLinesInTests = new CheckTests().getNumberOfLinesInTests(clone);
+            int numberOfLinesInTests = getNumberOfLinesInTests(clone);
             CommitsHistory commitsHistory = new CommitsHistory(clone);
             AnalyzePom analyzePom = new AnalyzePom();
             return new Repo(repoName,

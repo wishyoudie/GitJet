@@ -27,6 +27,12 @@ public class SettingsController {
     private TextField tokenField;
 
     /**
+     * Connection threshold field in settings. (maximum number of attempts to establish connection to repository)
+     */
+    @FXML
+    private TextField connectionThresholdField;
+
+    /**
      * Save button in settings.
      */
     @FXML
@@ -45,6 +51,7 @@ public class SettingsController {
         readSettings();
         usernameField.setText(settings.get("username"));
         tokenField.setText(settings.get("token"));
+        connectionThresholdField.setText(settings.get("connection_threshold"));
     }
 
     /**
@@ -54,6 +61,7 @@ public class SettingsController {
     protected void saveButtonPressed() {
         settings.replace("username", usernameField.getText());
         settings.replace("token", tokenField.getText());
+        settings.replace("connection_threshold", connectionThresholdField.getText());
         changeSettings();
         Utils.closeWindow(saveButton);
     }

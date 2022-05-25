@@ -43,13 +43,11 @@ public class AnalyzePom {
     }
 
     public boolean isMavenRepository(String link) throws IOException {
-
         String branch = getDefaultBranch(link);
 
         if (branch == null) {
             return false;
         }
-
 
         try {
             URL u = new URL(link + "/blob/" + branch + "/pom.xml");

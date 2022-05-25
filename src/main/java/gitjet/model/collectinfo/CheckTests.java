@@ -13,7 +13,7 @@ import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
 public class CheckTests {
 
     @Nullable
-    private File findTests(File file) {
+    private static File findTests(File file) {
         File[] filesArray = getFilesArray(file);
 
         File testDirectory = null;
@@ -32,7 +32,7 @@ public class CheckTests {
         return testDirectory;
     }
 
-    public int getNumberOfLinesInTests(File file) throws IOException {
+    public static int getNumberOfLinesInTests(File file) throws IOException {
         File testsDirectory = findTests(file);
 
         if (testsDirectory == null) {
