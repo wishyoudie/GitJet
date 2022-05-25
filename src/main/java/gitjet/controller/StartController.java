@@ -88,6 +88,14 @@ public class StartController {
     }
 
     /**
+     * Mouse hover 'Settings' button handler.
+     */
+    @FXML
+    protected void settingsButtonHover() {
+        hintText.setText("Preferences");
+    }
+
+    /**
      * Mouse exit any button handler.
      */
     @FXML
@@ -141,12 +149,12 @@ public class StartController {
     protected void lookButtonClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("table-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 650);
-        Stage getRepoStage = new Stage();
-        getRepoStage.setTitle("Gathered information");
-        getRepoStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
-        getRepoStage.setScene(scene);
-        getRepoStage.initModality(Modality.APPLICATION_MODAL);
-        getRepoStage.show();
+        Stage lookStage = new Stage();
+        lookStage.setTitle("Gathered information");
+        lookStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
+        lookStage.setScene(scene);
+        lookStage.initModality(Modality.APPLICATION_MODAL);
+        lookStage.show();
     }
 
     /**
@@ -165,6 +173,22 @@ public class StartController {
     @FXML
     protected void clearButtonClick() throws IOException {
         createWarningWindow(new ClearDataController());
+    }
+
+    /**
+     * Act after user pressed 'Settings' button on main screen.
+     * @throws IOException Throws if problems occurred while creating new window.
+     */
+    @FXML
+    protected void settingsButtonClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("settings-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 500, 500);
+        Stage settingsStage = new Stage();
+        settingsStage.setTitle("Preferences");
+        settingsStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/button_settings.png"))));
+        settingsStage.setScene(scene);
+        settingsStage.initModality(Modality.APPLICATION_MODAL);
+        settingsStage.show();
     }
 
     public void setStatus(String status) {

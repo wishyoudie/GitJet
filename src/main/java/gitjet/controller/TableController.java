@@ -1,5 +1,7 @@
 package gitjet.controller;
 
+import gitjet.Utils;
+import gitjet.model.Errors;
 import gitjet.model.Repo;
 import gitjet.model.ReposHandler;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -186,11 +189,16 @@ public class TableController {
      * Initialize contents of repository table.
      */
     private void initData() {
-        ReposHandler reposHandler = new ReposHandler();
-        List<Repo> repos = reposHandler.readData("data.dat");
-        reposData.addAll(repos);
-        summaryData.addAll(reposHandler.calculateSummary(repos));
-        dependenciesData.addAll(reposHandler.catalogDependencies(repos));
+        try {
+            ReposHandler reposHandler = new ReposHandler();
+            List<Repo> repos = reposHandler.readData("data.dat");
+            reposData.addAll(repos);
+            summaryData.addAll(reposHandler.calculateSummary(repos));
+            dependenciesData.addAll(reposHandler.catalogDependencies(repos));
+        } catch (IOException e) {
+            Utils.createErrorWindow(e.getMessage());
+            throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
+        }
     }
 
     /**

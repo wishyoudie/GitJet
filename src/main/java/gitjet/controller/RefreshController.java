@@ -1,13 +1,16 @@
 package gitjet.controller;
 
 import static gitjet.Utils.closeWindow;
+import static gitjet.Utils.createErrorWindow;
 
 import gitjet.Utils;
 import gitjet.model.Errors;
 import gitjet.model.ReposHandler;
+import gitjet.model.clonerepo.GitCloningException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -66,13 +69,18 @@ public class RefreshController implements WarningController {
                             repos.add(line);
                         }
                     } catch (IOException e) {
-                        throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+                        createErrorWindow(Errors.DATA_ERROR.getMessage());
+                        throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
                     }
 
                     Utils.cleanFile("data.dat");
                     ReposHandler reposHandler = new ReposHandler();
                     for (String line : repos) {
-                        reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)).addToStorage();
+                        try {
+                            reposHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)).addToStorage();
+                        } catch (GitCloningException | IOException e) {
+                            Utils.createErrorWindow(e.getMessage() + "\nSkipping repository " + Arrays.asList(line.split(" ")).get(0));
+                        }
                     }
                 });
         executor.shutdown();

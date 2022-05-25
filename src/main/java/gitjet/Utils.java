@@ -105,7 +105,9 @@ public class Utils {
         try (Writer cleaner = new BufferedWriter(new FileWriter(fileName))) {
             cleaner.write("");
         } catch (IOException e) {
-            throw new IllegalArgumentException("Couldn't clean file " + fileName);
+            String msg = "Couldn't open file " + fileName;
+            createErrorWindow(msg);
+            throw new IllegalArgumentException(msg);
         }
     }
 

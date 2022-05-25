@@ -2,11 +2,11 @@ package gitjet.controller;
 
 import gitjet.model.ReposHandler;
 
+import gitjet.model.clonerepo.GitCloningException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.*;
 
@@ -36,12 +36,16 @@ public class AddRepoController {
     protected void newRepoSubmit() {
         String textFieldValue = newRepoField.getText();
         ReposHandler reposHandler = new ReposHandler();
-        if (isLink(textFieldValue)) {
-            reposHandler.update(textFieldValue);
-        } else if (isNumber(textFieldValue)) {
-            reposHandler.searchRepos(Integer.parseInt(textFieldValue));
-        } else {
-            createErrorWindow("Unexpected input. Consider using URL to repository or a number of repositories to be found.");
+        try {
+            if (isLink(textFieldValue)) {
+                reposHandler.update(textFieldValue);
+            } else if (isNumber(textFieldValue)) {
+                reposHandler.searchRepos(Integer.parseInt(textFieldValue));
+            } else {
+                createErrorWindow("Unexpected input. Consider using URL to repository or a number of repositories to be found.");
+            }
+        } catch (GitCloningException | IOException e) {
+            createErrorWindow(e.getMessage());
         }
         closeWindow(newRepoField);
     }
@@ -60,7 +64,11 @@ public class AddRepoController {
         );
         File file = fileChooser.showOpenDialog(newRepoOpenFileButton.getScene().getWindow());
         if (file != null) {
-            new ReposHandler().handleLinksFile(file);
+            try {
+                new ReposHandler().handleLinksFile(file);
+            } catch (IllegalArgumentException e) {
+                createErrorWindow(e.getMessage());
+            }
         }
         closeWindow(newRepoOpenFileButton);
     }

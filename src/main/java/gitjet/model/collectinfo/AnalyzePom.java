@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+
+import gitjet.model.Errors;
 import org.json.*;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
@@ -67,12 +69,16 @@ public class AnalyzePom {
     }
 
     public String getDefaultBranch(String link) throws IOException {
-        GitHub gitHub = new GitHubBuilder().withOAuthToken(githubToken).build();
-        GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
-        String branch = ghRepository.getDefaultBranch();
-        System.out.println(branch);
-        System.out.println(gitHub.getRateLimit());
-        return branch;
+        try {
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(githubToken).build();
+            GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
+            String branch = ghRepository.getDefaultBranch();
+            System.out.println(branch);
+            System.out.println(gitHub.getRateLimit());
+            return branch;
+        } catch (IOException e) {
+            throw new IOException(Errors.TOKEN_ERROR.getMessage());
+        }
     }
 
     public void setGithubToken(String githubToken) {

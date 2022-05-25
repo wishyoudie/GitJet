@@ -43,6 +43,11 @@
                   <Image url="@images/button_clear.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="settingsButton" fitHeight="170.0" fitWidth="170.0" onMouseClicked="#settingsButtonClick" onMouseEntered="#settingsButtonHover" onMouseExited="#buttonExited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/button_settings.png" />
+               </image>
+            </ImageView>
          </children>
          <VBox.margin>
             <Insets />

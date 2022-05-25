@@ -7,6 +7,7 @@ import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.jgit.util.IO;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
@@ -32,7 +33,7 @@ public class ReposHandler {
      * @param fileName A file which contains result of handling.
      * @return List of data translated into Repo instances.
      */
-    public List<Repo> readData(String fileName) {
+    public List<Repo> readData(String fileName) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             List<Repo> result = new ArrayList<>();
             String line;
@@ -41,7 +42,7 @@ public class ReposHandler {
             }
             return result;
         } catch (IOException e) {
-            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            throw new IOException(Errors.DATA_ERROR.getMessage());
         }
     }
 
@@ -51,7 +52,7 @@ public class ReposHandler {
      * @param name A name of repository.
      * @return True if this repository has already been handled.
      */
-    public boolean alreadyHandled(String name) {
+    public boolean alreadyHandled(String name) throws IOException {
         List<String> scannedNames = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
             String line;
@@ -60,7 +61,7 @@ public class ReposHandler {
             }
             return scannedNames.contains(name);
         } catch (IOException e) {
-            throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            throw new IOException(Errors.DATA_ERROR.getMessage());
         }
     }
 
@@ -69,9 +70,8 @@ public class ReposHandler {
      * already been handled, handles it otherwise.
      * @param link URL to repository on GitHub.
      */
-    public void update(String link) {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.submit(() -> {
+    public void update(String link) throws IOException, GitCloningException {
+//        ExecutorService executor = Executors.newFixedThreadPool(1);
             String name = getNameFromLink(link);
             try (FileWriter writer = new FileWriter("data.dat", true)) {
                 if (alreadyHandled(name)) {
@@ -87,11 +87,9 @@ public class ReposHandler {
                 } else {
                     writer.append(handle(link).toString()).append(System.lineSeparator());
                 }
-            } catch (IOException e) {
-                throw new IllegalArgumentException(Errors.DATA_ERROR.getMessage());
+            } catch (GitCloningException | IOException e) {
+                throw e;
             }
-        });
-        executor.shutdown();
     }
 
     /**
@@ -99,7 +97,7 @@ public class ReposHandler {
      * @param link URL to repository on GitHub.
      * @return Repo instance of provided repository.
      */
-    public Repo handle(String link) {
+    public Repo handle(String link) throws GitCloningException, IOException {
         File clone = null;
 
         try {
@@ -119,7 +117,7 @@ public class ReposHandler {
                     analyzePom.getDependencies(clone));
         } catch (GitCloningException | IOException e) {
             e.printStackTrace();
-            return null;
+            throw e;
         } finally {
             deleteClone(clone);
         }
@@ -129,9 +127,8 @@ public class ReposHandler {
      * Search Maven repositories on GitHub and handle them.
      * @param requiredNumber A number of repositories to be found.
      */
-    public void searchRepos(int requiredNumber) {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.submit(() -> {
+    public void searchRepos(int requiredNumber) throws GitCloningException, IOException {
+//        ExecutorService executor = Executors.newFixedThreadPool(1);
             RepositoryService repositoryService = new RepositoryService();
             int page = 1;
             int counter = 0;
@@ -158,11 +155,10 @@ public class ReposHandler {
 
                     page++;
                 }
-            } catch (IOException e) {
+            } catch (IOException | GitCloningException e) {
                 e.printStackTrace();
+                throw e;
             }
-        });
-        executor.shutdown();
     }
 
     /**
@@ -179,7 +175,7 @@ public class ReposHandler {
                     update(line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | GitCloningException e) {
             throw new IllegalArgumentException("Couldn't open file " + file);
         }
     }
