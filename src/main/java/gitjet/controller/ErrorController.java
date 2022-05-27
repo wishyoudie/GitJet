@@ -1,10 +1,9 @@
 package gitjet.controller;
 
+import gitjet.WindowsUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-
-import static gitjet.Utils.closeWindow;
 
 public class ErrorController {
 
@@ -39,6 +38,6 @@ public class ErrorController {
     @FXML
     void initialize() {
         errorMessageText.setText(errorMessage);
-        errorOKButton.setOnAction(actionEvent -> closeWindow(errorOKButton));
+        errorOKButton.setOnAction(actionEvent -> WindowsUtils.closeWindow(errorOKButton));
     }
 }

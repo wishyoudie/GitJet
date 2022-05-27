@@ -1,6 +1,7 @@
 package gitjet.controller;
 
 import gitjet.Utils;
+import gitjet.WindowsUtils;
 import gitjet.model.Errors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -65,9 +66,9 @@ public class SettingsController {
             Integer.parseInt(connectionThresholdField.getText());
             settings.replace("connection_threshold", connectionThresholdField.getText());
             changeSettings();
-            Utils.closeWindow(saveButton);
+            WindowsUtils.closeWindow(saveButton);
         } catch (NumberFormatException e) {
-            Utils.createErrorWindow(String.format("Unsupported connection threshold setting value.\n'%s' is not a valid number.", connectionThresholdField.getText()));
+            WindowsUtils.createErrorWindow(String.format("Unsupported connection threshold setting value.\n'%s' is not a valid number.", connectionThresholdField.getText()));
         }
     }
 
@@ -83,7 +84,7 @@ public class SettingsController {
             }
 
         } catch (IOException e) {
-            Utils.createErrorWindow(Errors.SETTINGS_ERROR.getMessage());
+            WindowsUtils.createErrorWindow(Errors.SETTINGS_ERROR.getMessage());
             throw new IllegalStateException(Errors.SETTINGS_ERROR.getMessage());
         }
     }
@@ -98,7 +99,7 @@ public class SettingsController {
                 writer.append(entry.getKey()).append(":").append(entry.getValue()).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            Utils.createErrorWindow(Errors.SETTINGS_ERROR.getMessage());
+            WindowsUtils.createErrorWindow(Errors.SETTINGS_ERROR.getMessage());
             throw new IllegalStateException(Errors.SETTINGS_ERROR.getMessage());
         }
     }

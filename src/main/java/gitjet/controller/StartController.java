@@ -1,10 +1,8 @@
 package gitjet.controller;
 
 import gitjet.Application;
-import gitjet.Utils;
+import gitjet.WindowsUtils;
 import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,16 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
 import java.util.Objects;
-
-import static gitjet.Utils.createErrorWindow;
-import static gitjet.Utils.createWarningWindow;
 
 /**
  * Controller of start menu window.
@@ -116,14 +110,6 @@ public class StartController {
         fade.setToValue(1);
         fade.play();
 
-        RotateTransition rotate = new RotateTransition();
-        rotate.setNode(statusSpinner);
-        rotate.setDuration(Duration.millis(1000));
-        rotate.setCycleCount(TranslateTransition.INDEFINITE);
-        rotate.setByAngle(360);
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.play();
-
     }
 
     /**
@@ -164,7 +150,7 @@ public class StartController {
      */
     @FXML
     protected void refreshButtonClick() throws IOException {
-        createWarningWindow(new RefreshController());
+        WindowsUtils.createWarningWindow(new RefreshController());
     }
 
     /**
@@ -173,7 +159,7 @@ public class StartController {
      */
     @FXML
     protected void clearButtonClick() throws IOException {
-        createWarningWindow(new ClearDataController());
+        WindowsUtils.createWarningWindow(new ClearDataController());
     }
 
     /**

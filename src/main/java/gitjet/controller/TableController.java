@@ -1,9 +1,10 @@
 package gitjet.controller;
 
-import gitjet.Utils;
+import gitjet.WindowsUtils;
 import gitjet.model.Errors;
-import gitjet.model.Repo;
-import gitjet.model.ReposHandler;
+import gitjet.model.Repository;
+import gitjet.model.RepositoriesHandler;
+import gitjet.model.RepositoryEvaluation;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ public class TableController {
     /**
      * List of analyzed repositories.
      */
-    public final ObservableList<Repo> reposData = FXCollections.observableArrayList();
+    public final ObservableList<RepositoryEvaluation> reposData = FXCollections.observableArrayList();
 
     /**
      * List of analyzed dependencies.
@@ -36,125 +37,125 @@ public class TableController {
     /**
      * List of summarized repository data.
      */
-    public final ObservableList<Repo> summaryData = FXCollections.observableArrayList();
+    public final ObservableList<RepositoryEvaluation> summaryData = FXCollections.observableArrayList();
 
     /**
      * Table of repositories.
      */
     @FXML
-    private TableView<Repo> mainTable;
+    private TableView<RepositoryEvaluation> mainTable;
 
     /**
      * Repository name column in table.
      */
     @FXML
-    private TableColumn<Repo, String> nameColumn;
+    private TableColumn<RepositoryEvaluation, String> nameColumn;
 
     /**
      * Repository author column in table.
      */
     @FXML
-    private TableColumn<Repo, String> authorColumn;
+    private TableColumn<RepositoryEvaluation, String> authorColumn;
     /**
      * Total number of contributors into repository column.
      */
     @FXML
-    private TableColumn<Repo, Integer> contributorsColumn;
+    private TableColumn<RepositoryEvaluation, Integer> contributorsColumn;
 
     /**
      * Total number of commits in repository column.
      */
     @FXML
-    private TableColumn<Repo, Integer> commitsColumn;
+    private TableColumn<RepositoryEvaluation, Integer> commitsColumn;
 
     /**
      * Total number of lines in repository column.
      */
     @FXML
-    private TableColumn<Repo, Integer> linesColumn;
+    private TableColumn<RepositoryEvaluation, Integer> linesColumn;
 
     /**
      * Repository has tests column.
      */
     @FXML
-    private TableColumn<Repo, String> hasTestsColumn;
+    private TableColumn<RepositoryEvaluation, String> hasTestsColumn;
 
     /**
      * Total number of lines in tests in repository column.
      */
     @FXML
-    private TableColumn<Repo, Integer> testLinesColumn;
+    private TableColumn<RepositoryEvaluation, Integer> testLinesColumn;
 
     /**
      * Repository has a readme file column.
      */
     @FXML
-    private TableColumn<Repo, Boolean> readMeColumn;
+    private TableColumn<RepositoryEvaluation, Boolean> readMeColumn;
 
     /**
      * Total number of repository dependencies column.
      */
     @FXML
-    private TableColumn<Repo, String> dependenciesColumn;
+    private TableColumn<RepositoryEvaluation, String> dependenciesColumn;
 
     /**
      * Summary table of repositories.
      */
     @FXML
-    private TableView<Repo> summaryTable;
+    private TableView<RepositoryEvaluation> summaryTable;
 
     /**
      * Repository name column in summary table.
      */
     @FXML
-    private TableColumn<Repo, String> summaryNameColumn;
+    private TableColumn<RepositoryEvaluation, String> summaryNameColumn;
 
     /**
      * Repository author column in summary table.
      */
     @FXML
-    private TableColumn<Repo, String> summaryAuthorColumn;
+    private TableColumn<RepositoryEvaluation, String> summaryAuthorColumn;
     /**
      * Total number of contributors into repository column in summary table.
      */
     @FXML
-    private TableColumn<Repo, Integer> summaryContributorsColumn;
+    private TableColumn<RepositoryEvaluation, Integer> summaryContributorsColumn;
 
     /**
      * Total number of commits in repository column in summary table.
      */
     @FXML
-    private TableColumn<Repo, Integer> summaryCommitsColumn;
+    private TableColumn<RepositoryEvaluation, Integer> summaryCommitsColumn;
 
     /**
      * Total number of lines in repository column in summary table.
      */
     @FXML
-    private TableColumn<Repo, Integer> summaryLinesColumn;
+    private TableColumn<RepositoryEvaluation, Integer> summaryLinesColumn;
 
     /**
      * Repository has tests column in summary table.
      */
     @FXML
-    private TableColumn<Repo, String> summaryHasTestsColumn;
+    private TableColumn<RepositoryEvaluation, String> summaryHasTestsColumn;
 
     /**
      * Total number of lines in tests in repository column in summary table.
      */
     @FXML
-    private TableColumn<Repo, Integer> summaryTestLinesColumn;
+    private TableColumn<RepositoryEvaluation, Integer> summaryTestLinesColumn;
 
     /**
      * Repository has a readme file column in summary table.
      */
     @FXML
-    private TableColumn<Repo, Boolean> summaryReadMeColumn;
+    private TableColumn<RepositoryEvaluation, Boolean> summaryReadMeColumn;
 
     /**
      * Total number of repository dependencies column in summary table.
      */
     @FXML
-    private TableColumn<Repo, String> summaryDependenciesColumn;
+    private TableColumn<RepositoryEvaluation, String> summaryDependenciesColumn;
 
     /**
      * Table of dependencies.
@@ -190,13 +191,13 @@ public class TableController {
      */
     private void initData() {
         try {
-            ReposHandler reposHandler = new ReposHandler();
-            List<Repo> repos = reposHandler.readData("data.dat");
-            reposData.addAll(repos);
-            summaryData.addAll(reposHandler.calculateSummary(repos));
-            dependenciesData.addAll(reposHandler.catalogDependencies(repos));
+            RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
+            List<Repository> repositories = repositoriesHandler.readData("data.dat");
+            reposData.addAll(repositories);
+            summaryData.addAll(repositoriesHandler.calculateSummary(repositories));
+            dependenciesData.addAll(repositoriesHandler.catalogDependencies(repositories));
         } catch (IOException e) {
-            Utils.createErrorWindow(e.getMessage());
+            WindowsUtils.createErrorWindow(e.getMessage());
             throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
         }
     }

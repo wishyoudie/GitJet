@@ -1,5 +1,5 @@
-import gitjet.model.Repo;
-import gitjet.model.ReposHandler;
+import gitjet.model.Repository;
+import gitjet.model.RepositoriesHandler;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;
@@ -19,15 +19,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReposStatsTests {
 
     private static File repo1, repo2;
-    private static Repo handledRepo1, handledRepo2;
-    private static final ReposHandler reposHandler = new ReposHandler();
+    private static Repository handledRepository1, handledRepository2;
+    private static final RepositoriesHandler REPOSITORIES_HANDLER = new RepositoriesHandler();
 
     @BeforeAll
     static void setUp() throws GitCloningException, IOException {
         repo1 = runCloning("https://github.com/s1ckoleg/PolytechTerminalApp", "TestRepo1");
         repo2 = runCloning("https://github.com/wishyoudie/coursework_sem2_t1", "TestRepo2");
-        handledRepo1 = reposHandler.handle("https://github.com/s1ckoleg/PolytechTerminalApp");
-        handledRepo2 = reposHandler.handle("https://github.com/wishyoudie/coursework_sem2_t1");
+        handledRepository1 = REPOSITORIES_HANDLER.handle("https://github.com/s1ckoleg/PolytechTerminalApp");
+        handledRepository2 = REPOSITORIES_HANDLER.handle("https://github.com/wishyoudie/coursework_sem2_t1");
     }
 
     @AfterAll
@@ -39,8 +39,8 @@ class ReposStatsTests {
 
     @Test
     void authorTest() {
-        String repo1author = handledRepo1.getAuthor();
-        String repo2author = handledRepo2.getAuthor();
+        String repo1author = handledRepository1.getAuthor();
+        String repo2author = handledRepository2.getAuthor();
 
         assertEquals("s1ckoleg", repo1author);
         assertEquals("wishyoudie", repo2author);
@@ -61,16 +61,16 @@ class ReposStatsTests {
     @Test
     void checkReadmeTest() {
         assertFalse(isReadmeInProject(repo1));
-        assertEquals("-", handledRepo1.getHasReadMe());
+        assertEquals("-", handledRepository1.getHasReadMe());
         assertTrue(isReadmeInProject(repo2));
-        assertEquals("+", handledRepo2.getHasReadMe());
+        assertEquals("+", handledRepository2.getHasReadMe());
     }
 
     @Test
     void testsSizeTest() throws IOException {
-        assertEquals("+", handledRepo1.getHasTests());
+        assertEquals("+", handledRepository1.getHasTests());
         assertEquals(210, CheckTests.getNumberOfLinesInTests(repo1));
-        assertEquals("+", handledRepo2.getHasTests());
+        assertEquals("+", handledRepository2.getHasTests());
         assertEquals(234, CheckTests.getNumberOfLinesInTests(repo2));
     }
 

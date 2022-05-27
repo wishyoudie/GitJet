@@ -1,8 +1,7 @@
 package gitjet.controller;
 
-import static gitjet.Utils.closeWindow;
-
 import gitjet.Utils;
+import gitjet.WindowsUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
@@ -46,7 +45,7 @@ public class ClearDataController implements WarningController {
     @FXML
     public void warningButtonProceed() {
         Utils.cleanFile("data.dat");
-        closeWindow(warningProceedButton);
+        WindowsUtils.closeWindow(warningProceedButton);
     }
 
     /**
@@ -54,6 +53,6 @@ public class ClearDataController implements WarningController {
      */
     @FXML
     public void warningButtonCancel() {
-        closeWindow(warningCancelButton);
+        WindowsUtils.closeWindow(warningCancelButton);
     }
 }

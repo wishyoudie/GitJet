@@ -11,8 +11,8 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import static gitjet.Utils.getSetting;
-import static gitjet.model.Repo.getAuthorFromLink;
-import static gitjet.model.Repo.getNameFromLink;
+import static gitjet.model.Repository.getAuthorFromLink;
+import static gitjet.model.Repository.getNameFromLink;
 
 public class AnalyzePom {
 
@@ -38,6 +38,7 @@ public class AnalyzePom {
             }
 
             System.out.println("Dependencies: " + dependencies);
+            System.out.println("Finished");
             return dependencies;
         }
     }

@@ -24,9 +24,9 @@ public class CloneProjects {
 
         File localFile = Files.createTempDirectory(path, repoName).toFile();
 
-        if (!localFile.delete()) {
+       /* if (!localFile.delete()) {
             throw new IOException("Could not delete temporary file " + localFile);
-        }
+        }*/
 
         int counter = 0;
 
