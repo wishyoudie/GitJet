@@ -1,4 +1,4 @@
-package gitjet.model;
+package gitjet.model.repository;
 
 import java.util.HashSet;
 import java.util.List;

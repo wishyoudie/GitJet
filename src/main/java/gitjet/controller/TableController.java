@@ -2,9 +2,9 @@ package gitjet.controller;
 
 import gitjet.WindowsUtils;
 import gitjet.model.Errors;
-import gitjet.model.Repository;
-import gitjet.model.RepositoriesHandler;
-import gitjet.model.RepositoryEvaluation;
+import gitjet.model.repository.Repository;
+import gitjet.model.repository.RepositoriesHandler;
+import gitjet.model.repository.RepositoryEvaluation;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,8 +1,8 @@
 package gitjet.controller;
 
 import gitjet.Application;
-import gitjet.model.Repository;
-import gitjet.model.RepositoriesHandler;
+import gitjet.model.repository.Repository;
+import gitjet.model.repository.RepositoriesHandler;
 import gitjet.WindowsUtils;
 
 import gitjet.model.clonerepo.GitCloningException;

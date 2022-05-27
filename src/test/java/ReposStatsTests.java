@@ -1,5 +1,5 @@
-import gitjet.model.Repository;
-import gitjet.model.RepositoriesHandler;
+import gitjet.model.repository.Repository;
+import gitjet.model.repository.RepositoriesHandler;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.CheckTests;
 import gitjet.model.collectinfo.CommitsHistory;

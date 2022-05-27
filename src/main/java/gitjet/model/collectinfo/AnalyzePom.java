@@ -11,8 +11,8 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import static gitjet.Utils.getSetting;
-import static gitjet.model.Repository.getAuthorFromLink;
-import static gitjet.model.Repository.getNameFromLink;
+import static gitjet.model.repository.Repository.getAuthorFromLink;
+import static gitjet.model.repository.Repository.getNameFromLink;
 
 public class AnalyzePom {
 

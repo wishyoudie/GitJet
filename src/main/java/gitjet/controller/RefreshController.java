@@ -3,7 +3,7 @@ package gitjet.controller;
 import gitjet.Utils;
 import gitjet.WindowsUtils;
 import gitjet.model.Errors;
-import gitjet.model.RepositoriesHandler;
+import gitjet.model.repository.RepositoriesHandler;
 import gitjet.model.clonerepo.GitCloningException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

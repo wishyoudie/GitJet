@@ -1,4 +1,6 @@
-package gitjet.model;
+package gitjet.model.repository;
+
+import gitjet.model.Errors;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -20,48 +22,56 @@ public abstract class RepositoryEvaluation {
 
     /**
      * Author getter.
+     *
      * @return Repository authors username.
      */
     public abstract String getAuthor();
 
     /**
      * Number of contributors getter.
+     *
      * @return Number of contributors to repository.
      */
     public abstract int getNumberOfContributors();
 
     /**
      * Number of commits getter.
+     *
      * @return Number of commits to repository.
      */
     public abstract int getNumberOfCommits();
 
     /**
      * Total number of lines in project getter.
+     *
      * @return Number of lines in all project source code files.
      */
     public abstract int getNumberOfLinesInProject();
 
     /**
      * Flag if a repository has tests getter.
+     *
      * @return '+' if repository has test files, '-' otherwise.
      */
     public abstract String getHasTests();
 
     /**
      * Number of lines in tests getter.
+     *
      * @return Number of lines in test files.
      */
     public abstract int getNumberOfLinesInTests();
 
     /**
      * ReadMe getter (String).
+     *
      * @return '+' if repository has a ReadMe file, '-' otherwise.
      */
     public abstract String getHasReadMe();
 
     /**
      * Dependencies getter.
+     *
      * @return Set of repository dependencies.
      */
     public abstract Set<String> getMavenDependencies();

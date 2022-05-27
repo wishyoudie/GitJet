@@ -1,6 +1,7 @@
-package gitjet.model;
+package gitjet.model.repository;
 
 import gitjet.Utils;
+import gitjet.model.Errors;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.AnalyzePom;
 import gitjet.model.collectinfo.CommitsHistory;
@@ -10,13 +11,13 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import java.io.*;
 import java.util.*;
 
-import static gitjet.model.Repository.getAuthorFromLink;
+import static gitjet.model.repository.Repository.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
 import static gitjet.model.collectinfo.CheckReadme.isReadmeInProject;
 import static gitjet.model.collectinfo.CheckTests.getNumberOfLinesInTests;
 import static gitjet.model.collectinfo.LineSize.getAmountOfLines;
-import static gitjet.model.Repository.getNameFromLink;
+import static gitjet.model.repository.Repository.getNameFromLink;
 
 /**
  * Retrieve data from GitHub and turn it into Repo instances class.
