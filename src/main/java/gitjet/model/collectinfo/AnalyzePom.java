@@ -55,7 +55,7 @@ public class AnalyzePom {
             HttpURLConnection connection = (HttpURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
-            if (connection.getResponseCode() == 200) {
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 return true;
             }
             connection.disconnect();
