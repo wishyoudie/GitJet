@@ -1,5 +1,6 @@
 package gitjet.controller;
 
+import gitjet.WindowsUtils;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -36,5 +37,13 @@ public class ProgressController {
 
     public Label getStatus() {
         return this.statusText;
+    }
+
+    public ProgressController(String task) {
+        this.task = task;
+    }
+
+    public void close() {
+        WindowsUtils.closeWindow(statusText);
     }
 }

@@ -1,10 +1,13 @@
 package gitjet.model.repository;
 
 import gitjet.Utils;
+import gitjet.WindowsUtils;
+import gitjet.controller.ProgressController;
 import gitjet.model.Errors;
 import gitjet.model.clonerepo.GitCloningException;
 import gitjet.model.collectinfo.AnalyzePom;
 import gitjet.model.collectinfo.CommitsHistory;
+import javafx.application.Platform;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
@@ -71,25 +74,33 @@ public class RepositoriesHandler {
      * already been handled, handles it otherwise.
      *
      * @param link URL to repository on GitHub.
+     * @return 0 when finished.
      */
-    public void update(String link) throws IOException, GitCloningException {
-//        ExecutorService executor = Executors.newFixedThreadPool(1);
+    public byte update(String link) throws IOException, GitCloningException {
         String name = getNameFromLink(link);
-        try (FileWriter writer = new FileWriter("data.dat", true)) {
-            if (alreadyHandled(name)) {
-                List<Repository> data = readData("data.dat");
-                Utils.cleanFile("data.dat");
-                for (Repository repository : data) {
-                    if (Objects.equals(repository.getName(), name)) {
-                        writer.append(handle(link).toString()).append(System.lineSeparator());
-                    } else {
-                        writer.append(repository.toString()).append(System.lineSeparator());
-                    }
+        if (alreadyHandled(name)) {
+            StringBuilder lineBuffer = new StringBuilder();
+            BufferedReader br = new BufferedReader(new FileReader("data.dat"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String lineName = Arrays.asList(line.split(" ")).get(0);
+                if (Objects.equals(lineName, name)) {
+                    lineBuffer.append(handle(link));
+                } else {
+                    lineBuffer.append(line);
                 }
-            } else {
-                writer.append(handle(link).toString()).append(System.lineSeparator());
+                lineBuffer.append(System.lineSeparator());
             }
+            br.close();
+            FileOutputStream fileOut = new FileOutputStream("data.dat");
+            fileOut.write(lineBuffer.toString().getBytes());
+            fileOut.close();
+        } else {
+            Writer writer = new BufferedWriter(new FileWriter("data.dat", true));
+            writer.append(handle(link).toString()).append(System.lineSeparator());
+            writer.close();
         }
+        return 0;
     }
 
     /**
@@ -128,9 +139,9 @@ public class RepositoriesHandler {
      * Search Maven repositories on GitHub and handle them.
      *
      * @param requiredNumber A number of repositories to be found.
+     * @return 0 when finished.
      */
-    public void searchRepos(int requiredNumber) throws GitCloningException, IOException {
-//        ExecutorService executor = Executors.newFixedThreadPool(1);
+    public byte searchRepos(int requiredNumber) throws GitCloningException, IOException {
         RepositoryService repositoryService = new RepositoryService();
         int page = 1;
         int counter = 0;
@@ -148,7 +159,7 @@ public class RepositoriesHandler {
                         }
                         result.addToStorage();
                         if (counter == requiredNumber) {
-                            return;
+                            return 0;
                         }
                     }
                 }
@@ -159,25 +170,7 @@ public class RepositoriesHandler {
             e.printStackTrace();
             throw e;
         }
-    }
-
-    /**
-     * Handle multiple URLs taken from a text file.
-     *
-     * @param file A file which contains URLs to repositories on GitHub.
-     */
-    public void handleLinksFile(File file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            AnalyzePom analyzePom = new AnalyzePom();
-            while ((line = reader.readLine()) != null) {
-                if (analyzePom.isMavenRepository(line)) {
-                    update(line);
-                }
-            }
-        } catch (IOException | GitCloningException e) {
-            throw new IllegalArgumentException("Couldn't open file " + file);
-        }
+        return -1;
     }
 
     /**
@@ -213,5 +206,42 @@ public class RepositoriesHandler {
         result.add(new MeanRepository(repositories));
         result.add(new TotalRepository(repositories));
         return result;
+    }
+
+    public void runUpdatingThread(String link) {
+        String name = Repository.getNameFromLink(link);
+        Thread progress = new Thread(() -> {
+            ProgressController progressController = new ProgressController(String.format("Handling %s", name));
+            try {
+                Platform.runLater(() -> WindowsUtils.createProgressWindow(progressController));
+                byte continueFlag = update(link);
+                while (continueFlag != 0) {
+                    // wait
+                }
+                Platform.runLater(progressController::close);
+            } catch (IOException | GitCloningException e) {
+                e.printStackTrace();
+                WindowsUtils.createErrorWindow(e.getMessage());
+            }
+        });
+        progress.start();
+    }
+
+    public void runSearchingThread(int requiredNumber) {
+        Thread progress = new Thread(() -> {
+            ProgressController progressController = new ProgressController(String.format("Searching for %d %s", requiredNumber, requiredNumber == 1 ? "repository" : "repositories"));
+            try {
+                Platform.runLater(() -> WindowsUtils.createProgressWindow(progressController));
+                byte continueFlag = searchRepos(requiredNumber);
+                while (continueFlag != 0) {
+                    // wait
+                }
+                Platform.runLater(progressController::close);
+            } catch (IOException | GitCloningException e) {
+                e.printStackTrace();
+                WindowsUtils.createErrorWindow(e.getMessage());
+            }
+        });
+        progress.start();
     }
 }
