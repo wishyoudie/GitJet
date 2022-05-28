@@ -41,16 +41,20 @@ public class WindowsUtils {
      *
      * @param controller Controller instance to bind to window.
      */
-    public static void createWarningWindow(WarningController controller) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("warning-view.fxml"));
-        fxmlLoader.setController(controller);
-        Scene scene = new Scene(fxmlLoader.load(), 300, 200);
-        Stage warningStage = new Stage();
-        warningStage.setTitle("Refresh info");
-        warningStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
-        warningStage.setScene(scene);
-        warningStage.initModality(Modality.APPLICATION_MODAL);
-        warningStage.show();
+    public static void createWarningWindow(WarningController controller) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("warning-view.fxml"));
+            fxmlLoader.setController(controller);
+            Scene scene = new Scene(fxmlLoader.load(), 300, 200);
+            Stage warningStage = new Stage();
+            warningStage.setTitle("Refresh info");
+            warningStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/warning.png"))));
+            warningStage.setScene(scene);
+            warningStage.initModality(Modality.APPLICATION_MODAL);
+            warningStage.show();
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't find FXML preset for warning message.");
+        }
     }
 
     /**
@@ -58,16 +62,20 @@ public class WindowsUtils {
      *
      * @param controller Controller instance to bind to window.
      */
-    public static void createProgressWindow(ProgressController controller) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("progress-view.fxml"));
-        fxmlLoader.setController(controller);
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        Stage progressStage = new Stage();
-        progressStage.setTitle("Progress");
-        progressStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
-        progressStage.setScene(scene);
-        progressStage.initModality(Modality.WINDOW_MODAL);
-        progressStage.show();
+    public static void createProgressWindow(ProgressController controller) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("progress-view.fxml"));
+            fxmlLoader.setController(controller);
+            Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+            Stage progressStage = new Stage();
+            progressStage.setTitle("Progress");
+            progressStage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("images/icon.png"))));
+            progressStage.setScene(scene);
+            progressStage.initModality(Modality.WINDOW_MODAL);
+            progressStage.show();
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't find FXML preset for progress window.");
+        }
     }
 
     /**
