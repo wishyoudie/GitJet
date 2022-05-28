@@ -57,7 +57,7 @@ public class AddRepoController {
                 WindowsUtils.createErrorWindow("Please pick a number between 1-1000.");
             } else {
                 Label status = changeToProgressBar(String.format("Searching for %d repositories", number));
-                repositoriesHandler.searchRepos(Integer.parseInt(textFieldValue));
+                repositoriesHandler.searchRepos(number);
                 WindowsUtils.closeWindow(status);
             }
         } else {
