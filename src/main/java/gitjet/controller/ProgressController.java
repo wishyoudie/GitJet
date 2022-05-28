@@ -9,15 +9,38 @@ import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+/**
+ * Controller of 'Progress' window, which appears when handling repositories.
+ */
 public class ProgressController {
-    private String task = "Default";
+    /**
+     * Task container (as String for construction).
+     */
+    private final String task;
 
+    /**
+     * Jet spinner in progress bar.
+     */
     @FXML
     protected ImageView statusSpinner;
 
+    /**
+     * Task name in progress bar.
+     */
     @FXML
     protected Label statusText;
 
+    /**
+     * Controller from string stating a task.
+     * @param task A task to show progress of.
+     */
+    public ProgressController(String task) {
+        this.task = task;
+    }
+
+    /**
+     * Initializer.
+     */
     @FXML
     protected void initialize() {
         this.statusText.setText(this.task);
@@ -31,18 +54,9 @@ public class ProgressController {
         rotate.play();
     }
 
-    public void setTask(String task) {
-        this.task = task;
-    }
-
-    public Label getStatus() {
-        return this.statusText;
-    }
-
-    public ProgressController(String task) {
-        this.task = task;
-    }
-
+    /**
+     * Closer.
+     */
     public void close() {
         WindowsUtils.closeWindow(statusText);
     }

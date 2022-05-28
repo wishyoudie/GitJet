@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller of 'Settings' window, which appears after click on the gear button in start menu.
+ */
 public class SettingsController {
 
     /**

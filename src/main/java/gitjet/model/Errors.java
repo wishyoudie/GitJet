@@ -1,8 +1,10 @@
 package gitjet.model;
 
+/**
+ * Custom error messages.
+ */
 public enum Errors {
     CLONE_ERROR("Something went wrong during the project cloning"),
-    DELETE_ERROR("Something went wrong during the cleanup"),
     DATA_ERROR("Couldn't open 'data.dat' file. Consider checking its existence."),
     DIRECTORY_ERROR("Couldn't open the directory. Consider checking its existence."),
     TOKEN_ERROR("Something wrong with your GitHub token. Please check that you put valid token value in settings."),
@@ -13,7 +15,6 @@ public enum Errors {
     Errors(String message) {
         this.message = message;
     }
-
 
     public String getMessage() {
         return message;

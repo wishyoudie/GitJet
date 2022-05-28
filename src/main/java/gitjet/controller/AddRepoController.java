@@ -1,22 +1,9 @@
 package gitjet.controller;
 
-import gitjet.Application;
-import gitjet.model.repository.Repository;
 import gitjet.model.repository.RepositoriesHandler;
 import gitjet.WindowsUtils;
-
-import gitjet.model.clonerepo.GitCloningException;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import java.io.*;
-import java.util.Objects;
 
 import static gitjet.Utils.*;
 

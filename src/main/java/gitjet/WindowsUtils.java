@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A class that contains utility functions to open/close certain windows.
+ */
 public class WindowsUtils {
 
     /**

@@ -41,7 +41,8 @@ public class RefreshController implements WarningController {
     @FXML
     private Text warningText;
 
-    /**.
+    /**
+     * .
      * Initializer.
      */
     @FXML
@@ -58,28 +59,28 @@ public class RefreshController implements WarningController {
     public void warningButtonProceed() {
         ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(() -> {
-                    List<String> repos = new ArrayList<>();
+            List<String> repos = new ArrayList<>();
 
-                    try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            repos.add(line);
-                        }
-                    } catch (IOException e) {
-                        WindowsUtils.createErrorWindow(Errors.DATA_ERROR.getMessage());
-                        throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
-                    }
+            try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    repos.add(line);
+                }
+            } catch (IOException e) {
+                WindowsUtils.createErrorWindow(Errors.DATA_ERROR.getMessage());
+                throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
+            }
 
-                    Utils.cleanFile("data.dat");
-                    RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
-                    for (String line : repos) {
-                        try {
-                            repositoriesHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)).addToStorage();
-                        } catch (GitCloningException | IOException e) {
-                            WindowsUtils.createErrorWindow(e.getMessage() + "\nSkipping repository " + Arrays.asList(line.split(" ")).get(0));
-                        }
-                    }
-                });
+            Utils.cleanFile("data.dat");
+            RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
+            for (String line : repos) {
+                try {
+                    repositoriesHandler.handle("https://www.github.com/" + Arrays.asList(line.split(" ")).get(1) + "/" + Arrays.asList(line.split(" ")).get(0)).addToStorage();
+                } catch (GitCloningException | IOException e) {
+                    WindowsUtils.createErrorWindow(e.getMessage() + "\nSkipping repository " + Arrays.asList(line.split(" ")).get(0));
+                }
+            }
+        });
         executor.shutdown();
         WindowsUtils.closeWindow(warningProceedButton);
     }

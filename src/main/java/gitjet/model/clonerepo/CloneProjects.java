@@ -11,10 +11,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A class to clone project from GitHub.
+ */
 public class CloneProjects {
 
+    /**
+     * Maximum number of attempts to clone a project (for connection issues)
+     */
     private final static int NUMBER_OF_RETRIES = Integer.parseInt(Objects.requireNonNull(Utils.getSetting("connection_threshold")));
 
+    /**
+     * Run cloning of a project.
+     *
+     * @param repo     Link to repository on GitHub.
+     * @param repoName Name of repository.
+     * @return Cloned repository directory.
+     * @throws GitCloningException Throws if errors occurred while cloning repository.
+     * @throws IOException         Throws if errors occurred while creating local directory for repository.
+     */
     public static File runCloning(String repo, String repoName) throws GitCloningException, IOException {
 
         Path path = Path.of("clones");
@@ -23,10 +38,6 @@ public class CloneProjects {
         }
 
         File localFile = Files.createTempDirectory(path, repoName).toFile();
-
-       /* if (!localFile.delete()) {
-            throw new IOException("Could not delete temporary file " + localFile);
-        }*/
 
         int counter = 0;
 
@@ -50,6 +61,11 @@ public class CloneProjects {
         }
     }
 
+    /**
+     * Delete local clone of a repository.
+     *
+     * @param localFile Directory of cloned repository.
+     */
     public static void deleteClone(File localFile) {
         try {
             FileUtils.deleteDirectory(localFile);

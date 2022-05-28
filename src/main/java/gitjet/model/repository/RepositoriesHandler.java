@@ -1,6 +1,5 @@
 package gitjet.model.repository;
 
-import gitjet.Utils;
 import gitjet.WindowsUtils;
 import gitjet.controller.ProgressController;
 import gitjet.model.Errors;
@@ -10,10 +9,14 @@ import gitjet.model.collectinfo.CommitsHistory;
 import javafx.application.Platform;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.*;
 import java.util.*;
 
+import static gitjet.Utils.getSetting;
 import static gitjet.model.repository.Repository.getAuthorFromLink;
 import static gitjet.model.clonerepo.CloneProjects.deleteClone;
 import static gitjet.model.clonerepo.CloneProjects.runCloning;
@@ -196,6 +199,24 @@ public class RepositoriesHandler {
     }
 
     /**
+     * Get default branch of a remote repository.
+     *
+     * @param link URL to repository.
+     * @return Name of default branch.
+     * @throws IOException Throws if errors occurred while getting default branch.
+     */
+    public String getDefaultBranch(String link) throws IOException {
+        try {
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(getSetting("token")).build();
+            GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
+            return ghRepository.getDefaultBranch();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException(Errors.TOKEN_ERROR.getMessage());
+        }
+    }
+
+    /**
      * Structure summary into list of 'repositories' to pass to summary table.
      *
      * @param repositories List of repositories to summarize.
@@ -208,6 +229,11 @@ public class RepositoriesHandler {
         return result;
     }
 
+    /**
+     * Creates a new thread to update repository provided by link.
+     *
+     * @param link URL to a repository.
+     */
     public void runUpdatingThread(String link) {
         String name = Repository.getNameFromLink(link);
         Thread progress = new Thread(() -> {
@@ -227,6 +253,11 @@ public class RepositoriesHandler {
         progress.start();
     }
 
+    /**
+     * Creates a new thread to search for a number of repositories and handle them.
+     *
+     * @param requiredNumber A number of repositories to be found.
+     */
     public void runSearchingThread(int requiredNumber) {
         Thread progress = new Thread(() -> {
             ProgressController progressController = new ProgressController(String.format("Searching for %d %s", requiredNumber, requiredNumber == 1 ? "repository" : "repositories"));

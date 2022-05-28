@@ -5,17 +5,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import gitjet.model.Errors;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
+import gitjet.model.repository.RepositoriesHandler;
 
-import static gitjet.Utils.getSetting;
-import static gitjet.model.repository.Repository.getAuthorFromLink;
-import static gitjet.model.repository.Repository.getNameFromLink;
-
+/**
+ * A class to analyze pom.xml file of a repository.
+ */
 public class AnalyzePom {
 
+    /**
+     * Get dependencies of a repository.
+     *
+     * @param file Directory of a cloned repository.
+     * @return Set of repository dependencies.
+     * @throws IOException Throws if errors occurred while reading pom.xml file.
+     */
     public Set<String> getDependencies(File file) throws IOException {
 
         File pom = new File(file + File.separator + "pom.xml");
@@ -43,8 +46,15 @@ public class AnalyzePom {
         }
     }
 
+    /**
+     * Check if a repository is maven-based or not. Searches default branch for pom.xml file.
+     *
+     * @param link Repository URL.
+     * @return True if and only if a repository is maven-based.
+     * @throws IOException Throws if errors occurred while getting default branch.
+     */
     public boolean isMavenRepository(String link) throws IOException {
-        String branch = getDefaultBranch(link);
+        String branch = new RepositoriesHandler().getDefaultBranch(link);
 
         if (branch == null) {
             return false;
@@ -63,18 +73,5 @@ public class AnalyzePom {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public String getDefaultBranch(String link) throws IOException {
-        try {
-            GitHub gitHub = new GitHubBuilder().withOAuthToken(getSetting("token")).build();
-            GHRepository ghRepository = gitHub.getRepository(getAuthorFromLink(link) + "/" + getNameFromLink(link));
-            String branch = ghRepository.getDefaultBranch();
-            //System.out.println(gitHub.getRateLimit());
-            return branch;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException(Errors.TOKEN_ERROR.getMessage());
-        }
     }
 }

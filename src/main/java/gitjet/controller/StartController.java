@@ -8,8 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -34,21 +32,6 @@ public class StartController {
      */
     @FXML
     private Label hintText;
-
-    /**
-     * Image spinner in status bar.
-     */
-    @FXML
-    private ImageView statusSpinner;
-
-    /**
-     * Text label in status bar.
-     */
-    @FXML
-    private Label statusLabel;
-
-    @FXML
-    private HBox statusBar;
 
     /**
      * Mouse hover 'New' button handler.
@@ -114,6 +97,7 @@ public class StartController {
 
     /**
      * Act after user pressed 'New' button on main screen.
+     *
      * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
@@ -130,6 +114,7 @@ public class StartController {
 
     /**
      * Act after user pressed 'Look' button on main screen.
+     *
      * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
@@ -146,25 +131,22 @@ public class StartController {
 
     /**
      * Act after user pressed 'Refresh' button on main screen.
-     * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
-    protected void refreshButtonClick() throws IOException {
+    protected void refreshButtonClick() {
         WindowsUtils.createWarningWindow(new RefreshController());
     }
 
     /**
      * Act after user pressed 'Clear' button on main screen.
-     * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
-    protected void clearButtonClick() throws IOException {
+    protected void clearButtonClick() {
         WindowsUtils.createWarningWindow(new ClearDataController());
     }
 
     /**
      * Act after user pressed 'Settings' button on main screen.
-     * @throws IOException Throws if problems occurred while creating new window.
      */
     @FXML
     protected void settingsButtonClick() throws IOException {
@@ -176,13 +158,5 @@ public class StartController {
         settingsStage.setScene(scene);
         settingsStage.initModality(Modality.APPLICATION_MODAL);
         settingsStage.show();
-    }
-
-    public void setStatus(String status) {
-        statusLabel.setText(status);
-    }
-
-    public void setStatusBarVisible(boolean visible) {
-        statusBar.setVisible(visible);
     }
 }

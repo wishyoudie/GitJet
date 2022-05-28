@@ -224,7 +224,7 @@ public class TableController {
      */
     private void initSummaryTable() {
         summaryTable.widthProperty().addListener((ov, t, t1) -> {
-            Pane header = (Pane)summaryTable.lookup("TableHeaderRow");
+            Pane header = (Pane) summaryTable.lookup("TableHeaderRow");
             if (header != null && header.isVisible()) {
                 header.setMaxHeight(0);
                 header.setMinHeight(0);

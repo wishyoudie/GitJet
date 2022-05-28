@@ -16,6 +16,7 @@ public class Application extends javafx.application.Application {
 
     /**
      * Start program handler.
+     *
      * @param stage Primary stage.
      * @throws IOException Throws if problems occurred while creating new window.
      */
@@ -40,6 +41,7 @@ public class Application extends javafx.application.Application {
 
     /**
      * The main program entry point. Launches JavaFX.
+     *
      * @param args Command line arguments (not used).
      */
     public static void main(String[] args) {

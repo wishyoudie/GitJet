@@ -10,14 +10,20 @@ import java.util.regex.Pattern;
 
 import static gitjet.model.Errors.DIRECTORY_ERROR;
 
+/**
+ * Utility functions.
+ */
 public class Utils {
 
     /**
-     * Returns an array of files of the received directory
+     * Get file array containing all files in a directory (or a single file).
+     *
+     * @param file Directory or a file.
+     * @return an array of files of the received directory.
      */
     public static File[] getFilesArray(File file) {
         if (!file.isDirectory()) {
-            return new File[] {file};
+            return new File[]{file};
         }
 
         File[] filesList = file.listFiles();
@@ -30,6 +36,7 @@ public class Utils {
 
     /**
      * Check if a string is a correct URL link.
+     *
      * @param text String to check.
      * @return Result of check.
      */
@@ -39,6 +46,7 @@ public class Utils {
 
     /**
      * Check if a string is a number.
+     *
      * @param text String to check.
      * @return Result of check.
      */
@@ -48,6 +56,7 @@ public class Utils {
 
     /**
      * Delete all contents of a file.
+     *
      * @param fileName File to be cleaned.
      */
     public static void cleanFile(String fileName) {
@@ -62,6 +71,7 @@ public class Utils {
 
     /**
      * Get setting from settings file by its name.
+     *
      * @param parameterName Name of setting.
      * @return Setting value for given name.
      */

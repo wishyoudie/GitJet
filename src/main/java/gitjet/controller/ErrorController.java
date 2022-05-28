@@ -26,6 +26,7 @@ public class ErrorController {
 
     /**
      * Constructor from error message.
+     *
      * @param errorMessage Error message.
      */
     public ErrorController(String errorMessage) {
