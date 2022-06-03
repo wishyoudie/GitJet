@@ -40,7 +40,7 @@ public class AnalyzePom {
                 }
             }
 
-            System.out.println("Dependencies: " + dependencies);
+            //System.out.println("Dependencies: " + dependencies);
             System.out.println("Finished");
             return dependencies;
         }

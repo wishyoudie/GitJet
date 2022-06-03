@@ -53,7 +53,7 @@ public class CloneProjects {
                 counter++;
                 System.err.println("Can't clone project, retrying: " + counter + "/" + NUMBER_OF_RETRIES);
                 if (counter == NUMBER_OF_RETRIES) {
-                    System.err.println(Errors.CLONE_ERROR.getMessage());
+                    System.err.println(Errors.HANDLE_ERROR.getMessage());
                     System.err.println("Skipping " + repo);
                     return null;
                 }

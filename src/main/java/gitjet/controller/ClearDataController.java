@@ -44,7 +44,7 @@ public class ClearDataController implements WarningController {
      */
     @FXML
     public void warningButtonProceed() {
-        Utils.cleanFile("data.dat");
+        Utils.cleanFile(Utils.getSetting("storage"));
         WindowsUtils.closeWindow(warningProceedButton);
     }
 

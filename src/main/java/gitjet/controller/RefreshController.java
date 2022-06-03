@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,11 +58,10 @@ public class RefreshController implements WarningController {
      */
     @FXML
     public void warningButtonProceed() {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.submit(() -> {
+        new Thread(() -> {
             List<String> repos = new ArrayList<>();
 
-            try (BufferedReader br = new BufferedReader(new FileReader("data.dat"))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(Objects.requireNonNull(Utils.getSetting("storage"))))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     repos.add(line);
@@ -71,7 +71,7 @@ public class RefreshController implements WarningController {
                 throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
             }
 
-            Utils.cleanFile("data.dat");
+            Utils.cleanFile(Utils.getSetting("storage"));
             RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
             for (String line : repos) {
                 try {
@@ -80,8 +80,7 @@ public class RefreshController implements WarningController {
                     WindowsUtils.createErrorWindow(e.getMessage() + "\nSkipping repository " + Arrays.asList(line.split(" ")).get(0));
                 }
             }
-        });
-        executor.shutdown();
+        }).start();
         WindowsUtils.closeWindow(warningProceedButton);
     }
 

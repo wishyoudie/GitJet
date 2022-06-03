@@ -1,3 +1,4 @@
-username:example
-token:example
-connection_threshold:5
+storage %: data.dat
+connection_threshold %: 5
+username %: example
+token %: example

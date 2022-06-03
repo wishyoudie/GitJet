@@ -1,5 +1,6 @@
 package gitjet.controller;
 
+import gitjet.Utils;
 import gitjet.WindowsUtils;
 import gitjet.model.Errors;
 import gitjet.model.repository.Repository;
@@ -192,7 +193,7 @@ public class TableController {
     private void initData() {
         try {
             RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
-            List<Repository> repositories = repositoriesHandler.readData("data.dat");
+            List<Repository> repositories = repositoriesHandler.readData(Utils.getSetting("storage"));
             reposData.addAll(repositories);
             summaryData.addAll(repositoriesHandler.calculateSummary(repositories));
             dependenciesData.addAll(repositoriesHandler.catalogDependencies(repositories));

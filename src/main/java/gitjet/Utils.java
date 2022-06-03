@@ -79,7 +79,7 @@ public class Utils {
         try (BufferedReader br = new BufferedReader(new FileReader("settings.dat"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                List<String> parts = Arrays.asList(line.split(":"));
+                List<String> parts = Arrays.asList(line.split(getSettingValueSeparator()));
                 if (Objects.equals(parts.get(0), parameterName)) {
                     return parts.get(1);
                 }
@@ -89,5 +89,14 @@ public class Utils {
             throw new IllegalStateException(Errors.SETTINGS_ERROR.getMessage());
         }
         return null;
+    }
+
+    /**
+     * settingValueSeparator getter.
+     *
+     * @return Separator in settings file constant.
+     */
+    public static String getSettingValueSeparator() {
+        return " %: ";
     }
 }
