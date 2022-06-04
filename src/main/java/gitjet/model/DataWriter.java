@@ -11,6 +11,10 @@ import java.util.Objects;
  * Write data to storage class. Thread-safe by singleton pattern.
  */
 public class DataWriter {
+
+    /**
+     * Single instance of DataWriter class.
+     */
     private static volatile DataWriter instance;
 
     /**

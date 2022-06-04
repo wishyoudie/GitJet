@@ -1,7 +1,5 @@
 package gitjet.controller;
 
-import gitjet.Application;
-import gitjet.Utils;
 import gitjet.WindowsUtils;
 import gitjet.model.Errors;
 import javafx.fxml.FXML;
@@ -111,8 +109,7 @@ public class SettingsController {
      * Change settings in memory.
      */
     private void changeSettings() {
-        try (FileWriter writer = new FileWriter("settings.dat", true)) {
-            Utils.cleanFile("settings.dat");
+        try (Writer writer = new BufferedWriter(new FileWriter("settings.dat"))) {
             for (Map.Entry<String, String> entry : settings.entrySet()) {
                 writer.append(entry.getKey()).append(getSettingValueSeparator()).append(entry.getValue()).append(System.lineSeparator());
             }

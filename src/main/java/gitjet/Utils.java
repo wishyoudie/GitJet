@@ -55,21 +55,6 @@ public class Utils {
     }
 
     /**
-     * Delete all contents of a file.
-     *
-     * @param fileName File to be cleaned.
-     */
-    public static void cleanFile(String fileName) {
-        try (Writer cleaner = new BufferedWriter(new FileWriter(fileName))) {
-            cleaner.write("");
-        } catch (IOException e) {
-            String msg = "Couldn't open file " + fileName;
-            WindowsUtils.createErrorWindow(msg);
-            throw new IllegalArgumentException(msg);
-        }
-    }
-
-    /**
      * Get setting from settings file by its name.
      *
      * @param parameterName Name of setting.

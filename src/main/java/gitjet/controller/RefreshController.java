@@ -2,6 +2,7 @@ package gitjet.controller;
 
 import gitjet.Utils;
 import gitjet.WindowsUtils;
+import gitjet.model.DataWriter;
 import gitjet.model.Errors;
 import gitjet.model.repository.RepositoriesHandler;
 import gitjet.model.clonerepo.GitCloningException;
@@ -16,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Controller of 'Refresh data' window, which appears after click on the arrows button in start menu.
@@ -71,7 +70,7 @@ public class RefreshController implements WarningController {
                 throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
             }
 
-            Utils.cleanFile(Utils.getSetting("storage"));
+            DataWriter.getInstance().write("", false);
             RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
             for (String line : repos) {
                 try {
