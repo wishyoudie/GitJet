@@ -236,8 +236,7 @@ public class RepositoriesHandler {
             ProgressController progressController = new ProgressController(String.format("Handling %s", name));
             try {
                 Platform.runLater(() -> WindowsUtils.createProgressWindow(progressController));
-                boolean flag = update(link);
-                if (!flag) {
+                if (!update(link)) {
                     Platform.runLater(() -> WindowsUtils.createErrorWindow(Errors.HANDLE_ERROR.getMessage() + name));
                 }
                 Platform.runLater(progressController::close);
