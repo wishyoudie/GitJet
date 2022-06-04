@@ -1,7 +1,5 @@
 package gitjet.model;
 
-import gitjet.WindowsUtils;
-
 import static gitjet.Utils.getSetting;
 
 import java.io.*;
@@ -15,7 +13,7 @@ public class DataWriter {
     /**
      * Single instance of DataWriter class.
      */
-    private static volatile DataWriter instance;
+    private static DataWriter instance;
 
     /**
      * Get singleton instance.
@@ -23,16 +21,10 @@ public class DataWriter {
      * @return Instance.
      */
     public static synchronized DataWriter getInstance() {
-        DataWriter localInstance = instance;
-        if (localInstance == null) {
-            synchronized (DataWriter.class) {
-                localInstance = instance;
-                if (localInstance == null) {
-                    instance = localInstance = new DataWriter();
-                }
-            }
+        if (instance == null) {
+            instance = new DataWriter();
         }
-        return localInstance;
+        return instance;
     }
 
     /**
@@ -41,11 +33,11 @@ public class DataWriter {
      * @param text   Text to write/append.
      * @param append Flag to indicate whether to write or append.
      */
-    public void write(String text, boolean append) {
+    public synchronized void write(String text, boolean append) throws IOException {
         try (Writer writer = new BufferedWriter(new FileWriter(Objects.requireNonNull(getSetting("storage")), append))) {
             writer.append(text).append(System.lineSeparator());
         } catch (IOException e) {
-            WindowsUtils.createErrorWindow(Errors.DATA_ERROR.getMessage());
+            throw new IOException(Errors.DATA_ERROR.getMessage());
         }
     }
 }

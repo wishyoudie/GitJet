@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
+
 /**
  * Controller of 'Clear data' window, which appears after click on the 'x' button in start menu.
  */
@@ -44,7 +46,11 @@ public class ClearDataController implements WarningController {
      */
     @FXML
     public void warningButtonProceed() {
-        DataWriter.getInstance().write("", false);
+        try {
+            DataWriter.getInstance().write("", false);
+        } catch (IOException e) {
+            WindowsUtils.createErrorWindow(e.getMessage());
+        }
         WindowsUtils.closeWindow(warningProceedButton);
     }
 

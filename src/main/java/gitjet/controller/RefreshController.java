@@ -70,7 +70,11 @@ public class RefreshController implements WarningController {
                 throw new IllegalStateException(Errors.DATA_ERROR.getMessage());
             }
 
-            DataWriter.getInstance().write("", false);
+            try {
+                DataWriter.getInstance().write("", false);
+            } catch (IOException e) {
+                WindowsUtils.createErrorWindow(e.getMessage());
+            }
             RepositoriesHandler repositoriesHandler = new RepositoriesHandler();
             for (String line : repos) {
                 try {
